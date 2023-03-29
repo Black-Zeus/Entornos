@@ -61,4 +61,13 @@ unzip ConfigFile.zip
 echo "Permisos de ejecución aplicados a todos los archivos .sh dentro de los subdirectorios de ~/.config/"
 find "$HOME/.config/" -type f -name "*.sh" -exec chmod +x {} \;
 
+# Descargo Fondo de Pantalla
+echo "Descargamos fondo de pantalla"
+cd ~/.config
+wget https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png
+
+# Creamos directorio almacen para Fondo de Pantalla
+mkdir -p /usr/share/custonTheme/
+sudo mv ~/.config/Wall_OnePiece.png /usr/share/custonTheme/Wall_OnePiece.png
+
 echo "¡Listo! La instalación ha finalizado."
