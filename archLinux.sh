@@ -8,7 +8,7 @@ fi
 
 echo "Instalando paquetes del sistema..."
 sudo pacman -Syu
-sudo pacman -S --noconfirm base base-devel net-tools open-vm-tools htop btop neofetch
+sudo pacman -S --noconfirm base base-devel net-tools open-vm-tools htop btop neofetch openssh
 
 echo "Instalando paquetes de ventanas..."
 sudo pacman -S --noconfirmbspwm sxhkd polybar rofi picom kitty feh wget curl
