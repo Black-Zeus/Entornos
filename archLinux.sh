@@ -11,7 +11,7 @@ sudo pacman -Syu
 sudo pacman -S --noconfirm base base-devel net-tools open-vm-tools htop btop neofetch
 
 echo "Instalando paquetes de ventanas..."
-sudo pacman -S --noconfirmbspwm sxhkd polybar rofi picom kitty feh
+sudo pacman -S --noconfirmbspwm sxhkd polybar rofi picom kitty feh wget curl
 
 echo "Instalando paquetes de aplicaciones..."
 sudo pacman -S --noconfirmzsh caja firefox google-chrome remmina remmina-plugin git
