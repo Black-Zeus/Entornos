@@ -22,16 +22,44 @@ cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
 # Agregar personalizaciones al archivo de configuración bspwmrc
 cat <<EOF >> ~/.config/bspwm/bspwmrc
+# Configuración de bspwm
+# Se establece el ancho del borde de las ventanas en 1 píxel
 bspc config border_width 1
+
+# Ejecución de polybar
+# Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
 /home/zeus/.config/polybar/./launch.sh
+
+# Compositor de ventanas
+# Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
 picom &
+
+# Establecimiento del fondo de pantalla
+# Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
 feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
 EOF
 
+# Este script cambia la terminal por defecto de urxvt a kitty en el archivo sxhkdrc de sxhkd.
+# También cambia la combinación de teclas super + @space a super + d y el programa asociado a rofi -show run.
+
+# Primero, reemplazamos 'urxvt' por 'kitty' en el archivo sxhkdrc.
+sed -i 's/urxvt/kitty/g' ~/.config/sxhkd/sxhkdrc
+
+# A continuación, reemplazamos 'super + @space' por 'super + d' y 'dmenu_run' por 'rofi -show run'.
+sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
+
+
 # Descargar imagen de fondo de pantalla y archivo de configuración
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png -o ~/WallPapers/Wall_OnePiece.png
-curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip | tar -xz -C ~/ConfigFiles/ && rm ~/ConfigFiles/config.zip
+curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip -o ~/ConfigFiles/config.zip
 
 # Descomprimir archivo de configuración y eliminar archivo zip
 unzip ~/ConfigFiles/config.zip
 rm -Rf ~/ConfigFiles/config.zip
+
+cp ~/ConfigFiles/polybar ~/.config/polybar
+cp ~/ConfigFiles/bin ~/.config/bin
+
+find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
+chsh -s /bin/zsh
