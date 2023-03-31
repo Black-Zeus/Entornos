@@ -55,8 +55,9 @@ curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePie
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip -o ~/ConfigFiles/config.zip
 
 # Descomprimir archivo de configuración y eliminar archivo zip
-unzip ~/ConfigFiles/config.zip
-rm -Rf ~/ConfigFiles/config.zip
+cd ~/ConfigFiles/
+unzip config.zip
+rm -Rf config.zip
 
 cp -r ~/ConfigFiles/polybar/ ~/.config/polybar
 cp -r ~/ConfigFiles/bin ~/.config/bin
