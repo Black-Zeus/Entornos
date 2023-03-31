@@ -58,8 +58,8 @@ curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip 
 unzip ~/ConfigFiles/config.zip
 rm -Rf ~/ConfigFiles/config.zip
 
-cp ~/ConfigFiles/polybar ~/.config/polybar
-cp ~/ConfigFiles/bin ~/.config/bin
+cp -r ~/ConfigFiles/polybar/ ~/.config/polybar
+cp -r ~/ConfigFiles/bin ~/.config/bin
 
 find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
 chsh -s /bin/zsh
