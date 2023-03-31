@@ -71,9 +71,49 @@ cp -r ~/ConfigFiles/bin ~/.config/bin
 echo "Dar permisos de ejecución a los scripts"
 echo "Se otorgan permisos de ejecución a todos los archivos .sh que se encuentran en la carpeta ~/.config"
 echo "para que puedan ser ejecutados sin problemas."
-find ~/.config -type f -name "*.sh" -exec chmod +x {} ;
+find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
 
 echo "Cambiar shell predeterminada a zsh"
 echo "Se cambia la shell predeterminada del usuario a zsh usando el comando chsh"
 echo "para poder usar todas las características de la shell zsh."
 chsh -s /bin/zsh
+
+chsh -s $(which zsh)
+
+
+echo "Instalando NeoVim y Powerlevel10k..."
+mkdir -p ~/gitRepos
+cd ~/gitRepos
+
+# Instalar NeoVim y el plugin Powerlevel10k
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+git clone https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
+
+echo "Instalando fuentes Nerd Fonts Hack..."
+
+# Instalar fuentes Nerd Fonts Hack
+sudo mkdir -p /usr/share/fonts/nerd-fonts
+cd /usr/share/fonts/nerd-fonts
+sudo curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip
+sudo unzip Hack.zip
+sudo rm -Rf *.zip *.md
+fc-cache -f -v
+
+
+# Instalando AUR
+cd ~/gitRepos
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+yay -Sy --noconfirm ttf-meslo-nerd-font-powerlevel10k
+static char *font = "MesloLGS NF:pixelsize=14:antialias=true:autohint=true";
+sudo make install
+yay -Sy --noconfirm zsh-theme-powerlevel10k-git
+echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc 
+
+
+# Terminamos la instalacion
+echo "¡Listo! La instalación ha finalizado."
