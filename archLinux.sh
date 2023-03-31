@@ -65,7 +65,7 @@ rm -Rf config.zip
 echo "Copiar archivos de configuración de polybar y bin"
 echo "Se copian los archivos de configuración de polybar y bin del archivo descomprimido"
 echo "a sus respectivas carpetas en el sistema de archivos."
-cp -r ~/ConfigFiles/polybar/ ~/.config/polybar
+cp -r ~/ConfigFiles/polybar/* ~/.config/polybar
 cp -r ~/ConfigFiles/bin ~/.config/bin
 
 echo "Dar permisos de ejecución a los scripts"
