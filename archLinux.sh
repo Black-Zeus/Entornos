@@ -8,7 +8,15 @@ fi
 
 echo "Actualizando e instalando paquetes del sistema..."
 sudo pacman -Syu
-sudo pacman -S --noconfirm base base-devel net-tools open-vm-tools bspwm sxhkd polybar rofi picom kitty feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop mlocate
+
+# Instalamos la interfaz Gráfica
+sudo pacman -Sy --noconfirm xorg xorg-server gnome
+sudo systemctl enable gdm
+
+sudo pacman -Sy --noconfirm gtkmm open-vm-tools xf86-video-vmware xf86-input-vmmouse
+sudo systemctl enable vmtoolsd
+
+sudo pacman -S --noconfirm base base-devel net-tools bspwm sxhkd polybar rofi picom kitty feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop mlocate
 
 echo "Actualizando la base de datos de archivos..."
 sudo updatedb
