@@ -69,6 +69,6 @@ cp -r ~/ConfigFiles/bin ~/.config/bin
 echo "Dar permisos de ejecución a los scripts..."
 echo "Se otorgan permisos de ejecución a todos los archivos .sh que se encuentran en la carpeta ~/.config"
 echo "para que puedan ser ejecutados sin problemas."
-find ~/.config -type f -name "*.sh" -exec chmod +x {} ;
+find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
 
 echo "¡Listo! La instalación ha finalizado exitosamente."
