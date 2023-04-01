@@ -2,7 +2,7 @@
 
 # Actualizando repositorios e instalando paquetes
 echo "Actualizando repositorios e instalando paquetes..."
-sudo pacman -Syyu
+sudo pacman -Syu
 sudo pacman -Sy --noconfirm bspwm picom polybar feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop
 
 # Creando directorios necesarios
@@ -49,10 +49,6 @@ echo "Se descarga una imagen de fondo de pantalla y un archivo de configuración
 echo "usando el comando curl y se guardan en las carpetas correspondientes en el sistema de archivos"
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png -o ~/WallPapers/Wall_OnePiece.png
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip -o ~/ConfigFiles/config.zip
-
-# Descomprimir archivo de configuración y eliminar archivo zip
-echo "Descomprimir archivo de configuración y eliminar archivo zip..."
-echo "Se descomprime el archivo de configuración descargado usando el
 
 # Descomprimir archivo de configuración y eliminar archivo zip
 echo "Descomprimir archivo de configuración y eliminar archivo zip..."
