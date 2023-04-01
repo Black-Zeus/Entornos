@@ -3,7 +3,7 @@
 # Actualizando repositorios e instalando paquetes
 echo "Actualizando repositorios e instalando paquetes..."
 sudo pacman -Syyu
-sudo pacman -S bspwm picom polybar feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop
+sudo pacman -Sy --noconfirm bspwm picom polybar feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop
 
 # Creando directorios necesarios
 echo "Creando directorios necesarios..."
