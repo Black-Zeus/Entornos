@@ -70,13 +70,13 @@ sudo usermod --shell $(which zsh) $USER
 #EOF
 
 #sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
+#sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+#sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
+#sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
 #pause
-#zsh
+zsh
 
 echo "Copiando archivos de configuración de polybar y bin..."
 cp -r ~/ConfigFiles/bin ~/.config/
@@ -90,7 +90,7 @@ cp -r ~/ConfigFiles/bspwm ~/.config/
 cp -r ~/ConfigFiles/kitty ~/.config/
 cp -r ~/ConfigFiles/nvim ~/.config/
 
-echo "Copiando archivos de powerlevel10k y zsh_modul..."
+echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
