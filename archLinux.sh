@@ -56,7 +56,7 @@ picom &
 feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
 EOF
 
-sed -i 's/urxvt/kitty/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
 
