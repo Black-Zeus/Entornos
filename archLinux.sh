@@ -7,7 +7,7 @@ if [ $(id -u) = 0 ]; then
 fi
 
 echo "Actualizando e instalando paquetes del sistema..."
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm 
 
 # Instalamos la interfaz Gráfica
 sudo pacman -Sy --noconfirm xorg xorg-server gnome
@@ -22,7 +22,8 @@ echo "Actualizando la base de datos de archivos..."
 sudo updatedb
 
 echo "Creando directorios necesarios..."
-mkdir -p ~/.config/{bspwm,sxhkd,polybar} ~/{WallPapers,ConfigFiles}
+mkdir -p ~/.config/{bspwm,sxhkd,polybar} ~/{WallPapers,ConfigFiles,GitRepos,Desktop,powerlevel10k}
+sudo mkdir -p /usr/share/zsh-autosuggestions/ /usr/share/zsh-sudo/ /usr/share/zsh-syntax-highlighting/ 
 
 echo "Copiando archivos de configuración bspwm y sxhkd..."
 cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
@@ -73,8 +74,21 @@ rm -Rf config.zip
 echo "Copiar archivos de configuración de polybar y bin"
 echo "Se copian los archivos de configuración de polybar y bin del archivo descomprimido"
 echo "a sus respectivas carpetas en el sistema de archivos."
-cp -r ~/ConfigFiles/polybar/* ~/.config/polybar
-cp -r ~/ConfigFiles/bin ~/.config/bin
+
+cp -r ~/ConfigFiles/bin ~/.config/
+cp -r ~/ConfigFiles/zshrc/zshrc ~/.zshrc
+
+cp -r ~/ConfigFiles/polybar ~/.config/
+cp -r ~/ConfigFiles/bspwm ~/.config/
+cp -r ~/ConfigFiles/kitty ~/.config/
+cp -r ~/ConfigFiles/nvim ~/.config/
+cp -r ~/ConfigFiles/picom ~/.config/
+cp -r ~/ConfigFiles/rofi ~/.config/
+cp -r ~/ConfigFiles/sxhkd ~/.config/
+
+cp -r ~/ConfigFiles/powerlevel10k ~/powerlevel10k
+sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
+
 
 echo "Dar permisos de ejecución a los scripts"
 echo "Se otorgan permisos de ejecución a todos los archivos .sh que se encuentran en la carpeta ~/.config"
@@ -84,12 +98,7 @@ find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
 echo "Cambiar shell predeterminada a zsh"
 echo "Se cambia la shell predeterminada del usuario a zsh usando el comando chsh"
 echo "para poder usar todas las características de la shell zsh."
-chsh -s /bin/zsh
-
 chsh -s $(which zsh)
-
-mkdir -p ~/GitRepos
-mkdir -p ~/Desktop
 
 echo "Instalando fuentes Nerd Fonts Hack..."
 
@@ -109,6 +118,8 @@ git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
 makepkg -si
 
+
+## C
 
 # Terminamos la instalacion
 echo "¡Listo! La instalación ha finalizado."
