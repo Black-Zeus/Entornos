@@ -75,16 +75,16 @@ sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
-pause
-zsh
+#pause
+#zsh
 
 echo "Copiando archivos de configuración de polybar y bin..."
 cp -r ~/ConfigFiles/bin ~/.config/
 cp -r ~/ConfigFiles/zshrc/zshrc ~/.zshrc
 cp -r ~/ConfigFiles/p10k/p10k.zsh  ~/.p10k.zsh
 cp -r ~/ConfigFiles/polybar ~/.config/
-cp -r ~/ConfigFiles/picom ~/.config/
-cp -r ~/ConfigFiles/rofi ~/.config/
+#cp -r ~/ConfigFiles/picom ~/.config/
+#cp -r ~/ConfigFiles/rofi ~/.config/
 #cp -r ~/ConfigFiles/sxhkd ~/.config/
 #cp -r ~/ConfigFiles/bspwm ~/.config/
 cp -r ~/ConfigFiles/kitty ~/.config/
