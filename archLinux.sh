@@ -88,16 +88,8 @@ chsh -s /bin/zsh
 
 chsh -s $(which zsh)
 
-
-echo "Instalando NeoVim y Powerlevel10k..."
-mkdir -p ~/gitRepos
-cd ~/gitRepos
-
-# Instalar NeoVim y el plugin Powerlevel10k
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-git clone https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
+mkdir -p ~/GitRepos
+mkdir -p ~/Desktop
 
 echo "Instalando fuentes Nerd Fonts Hack..."
 
@@ -111,16 +103,11 @@ fc-cache -f -v
 
 
 # Instalando AUR
-cd ~/gitRepos
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
 
-yay -Sy --noconfirm ttf-meslo-nerd-font-powerlevel10k
-static char *font = "MesloLGS NF:pixelsize=14:antialias=true:autohint=true";
-sudo make install
-yay -Sy --noconfirm zsh-theme-powerlevel10k-git
-echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc 
+cd ~/GitRepos
+git clone https://aur.archlinux.org/paru-bin.git
+cd paru-bin
+makepkg -si
 
 
 # Terminamos la instalacion
