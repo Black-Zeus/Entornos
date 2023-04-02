@@ -51,7 +51,7 @@ sudo usermod --shell $(which zsh) $USER
 cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
 cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
-cat <<EOF >> nvim
+cat <<EOF >> ~/.config/bspwm/bspwmrc
 # Configuración de bspwm
 # Se establece el ancho del borde de las ventanas en 1 píxel
 bspc config border_width 1
