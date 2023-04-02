@@ -44,14 +44,14 @@ sudo unzip Hack.zip
 fc-cache -f -v
 
 
-echo "Cambiando shell predeterminada..."
+echo "Cambiando shell predeterminada..."bspwm
 sudo usermod --shell $(which zsh) $USER
 #chsh -s $(which zsh)
 
 cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
 cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
-cat <<EOF >> ~/.config/bspwm/bspwmrc
+cat <<EOF >> nvim
 # Configuración de bspwm
 # Se establece el ancho del borde de las ventanas en 1 píxel
 bspc config border_width 1
@@ -72,7 +72,7 @@ EOF
 sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/baspwm/bspwmrc
+sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
 pause
