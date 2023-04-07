@@ -8,25 +8,85 @@ fi
 echo "Actualizando e instalando paquetes del sistema..."
 sudo pacman -Syu --noconfirm 
 
-echo "Instalando la interfaz gráfica..."
-sudo pacman -Sy --needed --noconfirm xorg xorg-server gnome
+echo "Paquetes de gráficos y servidor X"
+sudo pacman -Sy --needed --noconfirm xorg xorg-server
+
+echo "Entorno de escritorio GNOME"
+sudo pacman -Sy --needed --noconfirm gnome
+
+echo "Habilitando servicio de GDM..."
 sudo systemctl enable gdm
 
-echo "Instalando paquetes adicionales..."
-sudo pacman -Sy --needed --noconfirm gtkmm open-vm-tools xf86-video-vmware xf86-input-vmmouse
+echo "Paquetes de interfaz gráfica"
+sudo pacman -Sy --needed --noconfirm gtkmm
+
+echo "Paquetes para virtualización"
+sudo pacman -Sy --needed --noconfirm open-vm-tools xf86-video-vmware xf86-input-vmmouse
+
+echo "Habilitando servicio de vmtoolsd..."
 sudo systemctl enable vmtoolsd
-sudo pacman -Sy --needed --noconfirm base base-devel net-tools bspwm sxhkd polybar rofi picom kitty feh zsh git zip unrar p7zip unzip bat lsd wget curl firefox caja vi vim neovim htop btop mlocate
+
+echo "Instalando paquetes base..."
+sudo pacman -Sy --needed --noconfirm base base-devel
+
+echo "Instalando herramientas de red..."
+sudo pacman -Sy --needed --noconfirm net-tools
+
+echo "Instalando gestores de ventanas y escritorios..."
+sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar rofi picom
+
+echo "Instalando terminales..."
+sudo pacman -Sy --needed --noconfirm kitty zsh
+
+echo "Instalando herramientas de compresión y descompresión..."
+sudo pacman -Sy --needed --noconfirm zip unrar p7zip unzip
+
+echo "Instalando herramientas de visualización de archivos..."
+sudo pacman -Sy --needed --noconfirm bat lsd feh pluma
+
+echo "Instalando gestor de archivos..."
+sudo pacman -Sy --needed --noconfirm caja
+
+echo "Instalando editores de texto..."
+sudo pacman -Sy --needed --noconfirm vi vim neovim
+
+echo "Instalando herramientas de descarga..."
+sudo pacman -Sy --needed --noconfirm wget curl
+
+echo "Instalando navegador web..."
+sudo pacman -Sy --needed --noconfirm firefox
+
+echo "Instalando herramientas de monitoreo del sistema..."
+sudo pacman -Sy --needed --noconfirm htop btop mlocate
 
 echo "Actualizando la base de datos de archivos..."
 sudo updatedb
 
 echo "Creando directorios necesarios..."
-mkdir -p ~/.config/{bspwm,sxhkd,polybar} ~/{WallPapers,ConfigFiles,GitRepos,Desktop,powerlevel10k}
-sudo mkdir -p /usr/share/zsh-autosuggestions/ /usr/share/zsh-sudo/ /usr/share/zsh-syntax-highlighting/ /usr/share/fonts/nerd-fonts
+
+# Directorios en el directorio personal
+config_dirs=(bspwm sxhkd polybar)
+personal_dirs=(WallPapers ConfigFiles GitRepos Desktop powerlevel10k)
+for dir in "${config_dirs[@]}"; do
+    mkdir -p ~/.config/"$dir"
+done
+for dir in "${personal_dirs[@]}"; do
+    mkdir -p ~/"$dir"
+done
+
+# Directorios del sistema
+system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts)
+for dir in "${system_dirs[@]}"; do
+    sudo mkdir -p "/usr/share/$dir"
+done
 
 echo "Descargando imagen de fondo de pantalla y archivo de configuración..."
+
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png -o ~/WallPapers/Wall_OnePiece.png
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip -o ~/ConfigFiles/config.zip
+
+echo "Descomprimiendo archivo de configuración y eliminando archivo zip..."
+cd ~/ConfigFiles/
 
 echo "Descomprimiendo archivo de configuración y eliminando archivo zip..."
 cd ~/ConfigFiles/
@@ -48,26 +108,28 @@ echo "Cambiando shell predeterminada..."bspwm
 sudo usermod --shell $(which zsh) $USER
 #chsh -s $(which zsh)
 
-#cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
-#cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
+cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
+cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
-#cat <<EOF >> ~/.config/bspwm/bspwmrc
+cat <<EOF >> ~/.config/bspwm/bspwmrc
+
+### Configuracion Personalizada ###
 # Configuración de bspwm
 # Se establece el ancho del borde de las ventanas en 1 píxel
-#bspc config border_width 1
+bspc config border_width 1
 
 # Ejecución de polybar
 # Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
-#/home/zeus/.config/polybar/./launch.sh
+/home/zeus/.config/polybar/./launch.sh
 
 # Compositor de ventanas
 # Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
-#picom &
+picom &
 
 # Establecimiento del fondo de pantalla
 # Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
-#feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
-#EOF
+feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
+EOF
 
 #sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
 #sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
@@ -83,11 +145,11 @@ cp -r ~/ConfigFiles/bin ~/.config/
 cp -r ~/ConfigFiles/zshrc/zshrc ~/.zshrc
 cp -r ~/ConfigFiles/p10k/p10k.zsh  ~/.p10k.zsh
 cp -r ~/ConfigFiles/polybar ~/.config/
-cp -r ~/ConfigFiles/picom ~/.config/
+#cp -r ~/ConfigFiles/picom ~/.config/
 cp -r ~/ConfigFiles/rofi ~/.config/
-cp -r ~/ConfigFiles/sxhkd ~/.config/
-cp -r ~/ConfigFiles/bspwm ~/.config/
-cp -r ~/ConfigFiles/kitty ~/.config/
+#cp -r ~/ConfigFiles/sxhkd ~/.config/
+#cp -r ~/ConfigFiles/bspwm ~/.config/
+#cp -r ~/ConfigFiles/kitty ~/.config/
 cp -r ~/ConfigFiles/nvim ~/.config/
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
@@ -95,9 +157,9 @@ cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
-sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
-sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
-sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
+#sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+#sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
+#sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
 
 
 echo "Otorgando permisos de ejecución..."
