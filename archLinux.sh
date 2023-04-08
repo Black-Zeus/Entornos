@@ -75,8 +75,9 @@ for dir in "${personal_dirs[@]}"; do
 done
 
 # Directorios del sistema
-system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts)
+system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts  fonts/polybar)
 for dir in "${system_dirs[@]}"; do
+	echo "Creando Directorio: /usr/share/$dir"
     sudo mkdir -p "/usr/share/$dir"
 done
 
@@ -96,15 +97,17 @@ unzip config.zip
 
 
 ### Aqui comienza la personalizacion 
-
 # Instalar fuentes Nerd Fonts Hack
 cd /usr/share/fonts/nerd-fonts
 sudo curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip
 sudo unzip Hack.zip
+
+# Copiando Fuentes empleadas en PolyBar
+sudo cp ~/ConfigFiles/polybar/fonts/* /usr/share/fonts/polybar/
 fc-cache -f -v
 
 
-echo "Cambiando shell predeterminada..."bspwm
+echo "Cambiando shell predeterminada..."
 sudo usermod --shell $(which zsh) $USER
 #chsh -s $(which zsh)
 
@@ -131,33 +134,33 @@ picom &
 feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
 EOF
 
-#sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
-#sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
-#sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
 #sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
 #pause
-zsh
+#zsh
 
 echo "Copiando archivos de configuración de polybar y bin..."
 cp -r ~/ConfigFiles/bin ~/.config/
 cp -r ~/ConfigFiles/zshrc/zshrc ~/.zshrc
 cp -r ~/ConfigFiles/p10k/p10k.zsh  ~/.p10k.zsh
 cp -r ~/ConfigFiles/polybar ~/.config/
-#cp -r ~/ConfigFiles/picom ~/.config/
 cp -r ~/ConfigFiles/rofi ~/.config/
+cp -r ~/ConfigFiles/nvim ~/.config/
+#cp -r ~/ConfigFiles/picom ~/.config/
 #cp -r ~/ConfigFiles/sxhkd ~/.config/
 #cp -r ~/ConfigFiles/bspwm ~/.config/
 #cp -r ~/ConfigFiles/kitty ~/.config/
-cp -r ~/ConfigFiles/nvim ~/.config/
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
-#sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
 #sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
 #sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
 
