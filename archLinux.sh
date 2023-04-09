@@ -68,16 +68,18 @@ echo "Creando directorios necesarios..."
 config_dirs=(bspwm sxhkd polybar)
 personal_dirs=(WallPapers ConfigFiles GitRepos Desktop powerlevel10k)
 for dir in "${config_dirs[@]}"; do
+    echo "Creando Directorio: ~/.config/$dir"
     mkdir -p ~/.config/"$dir"
 done
 for dir in "${personal_dirs[@]}"; do
+    echo "Creando Directorio: ~/$dir"
     mkdir -p ~/"$dir"
 done
 
 # Directorios del sistema
 system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts  fonts/polybar)
 for dir in "${system_dirs[@]}"; do
-	echo "Creando Directorio: /usr/share/$dir"
+    echo "Creando Directorio: /usr/share/$dir"
     sudo mkdir -p "/usr/share/$dir"
 done
 
@@ -167,7 +169,7 @@ sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.p
 
 echo "Otorgando permisos de ejecución..."
 find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
-chmod +x ~/.config/polybar/scripts *
+chmod +x ~/.config/polybar/scripts/*
 
 # Eliminar archivos Innecesarios
 sudo rm -rf /usr/share/fonts/nerd-fonts/{*.zip,*.md}
