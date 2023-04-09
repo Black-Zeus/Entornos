@@ -96,8 +96,6 @@ cd ~/ConfigFiles/
 unzip config.zip
 
 ### Hasta aca solo son instalacion de paquets
-
-
 ### Aqui comienza la personalizacion 
 # Instalar fuentes Nerd Fonts Hack
 cd /usr/share/fonts/nerd-fonts
@@ -108,9 +106,9 @@ sudo unzip Hack.zip
 sudo cp ~/ConfigFiles/polybar/fonts/* /usr/share/fonts/polybar/
 fc-cache -f -v
 
-
 echo "Cambiando shell predeterminada..."
 sudo usermod --shell $(which zsh) $USER
+sudo usermod --shell $(which zsh) root
 #chsh -s $(which zsh)
 
 cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
@@ -118,28 +116,28 @@ cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
 #cat <<EOF >> ~/.config/bspwm/bspwmrc
 #
-#### Configuracion Personalizada ###
-## Configuración de bspwm
-## Se establece el ancho del borde de las ventanas en 1 píxel
-#bspc config border_width 1
-#
-## Ejecución de polybar
-## Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
-#/home/zeus/.config/polybar/./launch.sh
-#
-## Compositor de ventanas
-## Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
-#picom &
-#
-## Establecimiento del fondo de pantalla
-## Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
-#feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
-#EOF
+### Configuracion Personalizada ###
+# Configuración de bspwm
+# Se establece el ancho del borde de las ventanas en 1 píxel
+bspc config border_width 1
 
-#sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
-#sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
-#sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
-#sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
+# Ejecución de polybar
+# Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
+/home/zeus/.config/polybar/./launch.sh
+
+# Compositor de ventanas
+# Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
+picom &
+
+# Establecimiento del fondo de pantalla
+# Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
+feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
+EOF
+
+sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
 #pause
@@ -153,19 +151,28 @@ cp -r ~/ConfigFiles/polybar ~/.config/
 cp -r ~/ConfigFiles/rofi ~/.config/
 cp -r ~/ConfigFiles/nvim ~/.config/
 #cp -r ~/ConfigFiles/picom ~/.config/
-cp -r ~/ConfigFiles/sxhkd ~/.config/
-cp -r ~/ConfigFiles/bspwm ~/.config/
-cp -r ~/ConfigFiles/kitty ~/.config/
+#cp -r ~/ConfigFiles/sxhkd ~/.config/
+#cp -r ~/ConfigFiles/bspwm ~/.config/
+#cp -r ~/ConfigFiles/kitty ~/.config/
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
-#sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
-#sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
+sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
+sed -i "s/picom &/#picom &/" ~/.config/sxhkd/sxhkdrc
 sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
 
+echo "Copia archivos a Root"
+sudo mkdir -p /root/.config/nvim
+sudo mkdir -p /root/powerlevel10k
+
+sudo cp -r ~/ConfigFiles/zshrc/zshrc /root/.zshrc
+sudo cp -r ~/ConfigFiles/p10k/p10k.zsh  /root/.p10k.zsh
+sudo cp -r ~/ConfigFiles/nvim/* /root/.config/nvim
+sudo cp -r ~/powerlevel10k/* /root/powerlevel10k
 
 echo "Otorgando permisos de ejecución..."
 find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
