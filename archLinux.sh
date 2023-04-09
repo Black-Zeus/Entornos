@@ -114,29 +114,29 @@ sudo usermod --shell $(which zsh) $USER
 cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
 cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
 
-cat <<EOF >> ~/.config/bspwm/bspwmrc
+#cat <<EOF >> ~/.config/bspwm/bspwmrc
+#
+#### Configuracion Personalizada ###
+## Configuración de bspwm
+## Se establece el ancho del borde de las ventanas en 1 píxel
+#bspc config border_width 1
+#
+## Ejecución de polybar
+## Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
+#/home/zeus/.config/polybar/./launch.sh
+#
+## Compositor de ventanas
+## Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
+#picom &
+#
+## Establecimiento del fondo de pantalla
+## Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
+#feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
+#EOF
 
-### Configuracion Personalizada ###
-# Configuración de bspwm
-# Se establece el ancho del borde de las ventanas en 1 píxel
-bspc config border_width 1
-
-# Ejecución de polybar
-# Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
-/home/zeus/.config/polybar/./launch.sh
-
-# Compositor de ventanas
-# Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
-picom &
-
-# Establecimiento del fondo de pantalla
-# Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
-feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
-EOF
-
-sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
+#sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
+#sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+#sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
 #sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 
 echo "Se cargara zsh, ingrese exit para continuar"
@@ -151,23 +151,23 @@ cp -r ~/ConfigFiles/polybar ~/.config/
 cp -r ~/ConfigFiles/rofi ~/.config/
 cp -r ~/ConfigFiles/nvim ~/.config/
 #cp -r ~/ConfigFiles/picom ~/.config/
-#cp -r ~/ConfigFiles/sxhkd ~/.config/
-#cp -r ~/ConfigFiles/bspwm ~/.config/
-#cp -r ~/ConfigFiles/kitty ~/.config/
+cp -r ~/ConfigFiles/sxhkd ~/.config/
+cp -r ~/ConfigFiles/bspwm ~/.config/
+cp -r ~/ConfigFiles/kitty ~/.config/
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
-sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+#sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
 #sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
-#sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
+sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
 
 
 echo "Otorgando permisos de ejecución..."
 find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
-
+chmod +x ~/.config/polybar/scripts *
 
 # Eliminar archivos Innecesarios
 sudo rm -rf /usr/share/fonts/nerd-fonts/{*.zip,*.md}
