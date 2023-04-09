@@ -33,7 +33,8 @@ echo "Instalando herramientas de red..."
 sudo pacman -Sy --needed --noconfirm net-tools
 
 echo "Instalando gestores de ventanas y escritorios..."
-sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar rofi picom
+# rofi
+sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar  picom
 
 echo "Instalando terminales..."
 sudo pacman -Sy --needed --noconfirm kitty zsh
