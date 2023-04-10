@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Instalación de los paquetes necesarios para construir paru
+sudo pacman -S --noconfirm --needed base-devel git
+
+# Clonación del repositorio de paru
+git clone https://aur.archlinux.org/paru.git
+
+# Cambio de directorio al repositorio de paru
+cd paru
+
+# Compilación y construcción de paru
+makepkg -si --noconfirm
+
+# Eliminación del directorio del repositorio de paru
+cd ..
+rm -rf paru
+
 # Instalación de Apache y PHP
 sudo pacman -S --noconfirm --needed apache php php-apache
 
@@ -57,6 +73,16 @@ code --install-extension ms-python.python
 
 # Instalación de Spyder
 sudo pacman -S --noconfirm --needed spyder
+
+# Instalación de Firefox
+sudo pacman -S --noconfirm --needed firefox
+
+# Instalación de Google Chrome
+yay -S --noconfirm --needed google-chrome
+
+# Limpieza de caché de paquetes
+sudo pacman -Scc --noconfirm
+
 
 # Limpieza de caché de paquetes
 sudo pacman -Scc --noconfirm
