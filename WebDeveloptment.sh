@@ -41,13 +41,22 @@ yay -S --noconfirm --needed gitkraken
 # Instalación de Insomnia
 yay -S --noconfirm --needed insomnia
 
-# Instalación de PhpStorm
-yay -S --noconfirm --needed phpstorm
-
 # Instalación de Docker
 sudo pacman -S --noconfirm --needed docker docker-compose
 sudo systemctl enable docker
 sudo systemctl start docker
+
+# Instalación de DBeaver
+yay -S --noconfirm --needed dbeaver
+
+# Instalación de CherryTree
+sudo pacman -S --noconfirm --needed cherrytree
+
+# Instalación de VS Code para Python
+code --install-extension ms-python.python
+
+# Instalación de Spyder
+sudo pacman -S --noconfirm --needed spyder
 
 # Limpieza de caché de paquetes
 sudo pacman -Scc --noconfirm
