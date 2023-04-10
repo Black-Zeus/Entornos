@@ -4,7 +4,7 @@ Repositorio de Scripts para Instalación de Arch Linux
 Este repositorio contiene una serie de scripts útiles para la instalación y configuración de Arch Linux. A continuación, se describe brevemente cada uno de ellos.
 Es necesario contar con el medio de instalacion oficial de ArchLinux, pudiendo emplear el primer sctipt para su intalacion, realizar esta de forma manual o bien empleando archinstall.
 
-![Entorno general](entorno-general.png "Captura del entorno desplegado"){: width="400" height="300"}
+![Entorno general](entorno-general.png "Captura del entorno desplegado")
 
 ## Requisitos mínimos para instalar Arch Linux con los scripts presentados
 
@@ -20,13 +20,12 @@ Es necesario contar con el medio de instalacion oficial de ArchLinux, pudiendo e
 
 ### Neofetch
 La imagen muestra una captura de pantalla de Neofetch, un comando de línea de terminal que muestra información del sistema, como la distribución de Linux, la versión del kernel, el hardware, la memoria y más.
-![Neofetch](neofetch.png "Captura de pantalla del ambiente, empleando el comando fetch para obtener información de la distribución"){: width="400" height="300"}
+![Neofetch](neofetch.png "Captura de pantalla del ambiente, empleando el comando fetch para obtener información de la distribución")
 
 
 ## Visualizacion de recursos consumidos empleando Btop y Htop para recuperar esta informacion
-![captura de pantalla de htop](ruta/a/la/imagen/htop.png "captura de pantalla de htop"){: width="400" height="300"}
-![captura de pantalla de btop](ruta/a/la/imagen/btop.png "captura de pantalla de btop"){: width="400" height="300"}
-
+![captura de pantalla de htop](htop.png "captura de pantalla de htop")
+![captura de pantalla de btop](btop.png "captura de pantalla de btop")
 
 ## Script 1: install_SistemaBaseArchLinux.sh
 Este script se encarga de la instalación del sistema base de Arch Linux. Primero, verifica que el sistema esté conectado a internet y, a continuación, actualiza los repositorios e instala los paquetes necesarios para realizar la instalación. Luego, crea las particiones necesarias en el disco duro y formatea las mismas con el sistema de archivos elegido por el usuario. Por último, instala el bootloader GRUB y reinicia el sistema.
