@@ -33,7 +33,6 @@ echo "Instalando herramientas de red..."
 sudo pacman -Sy --needed --noconfirm net-tools
 
 echo "Instalando gestores de ventanas y escritorios..."
-# rofi
 sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar  picom
 
 echo "Instalando terminales..."
@@ -66,8 +65,8 @@ sudo updatedb
 echo "Creando directorios necesarios..."
 
 # Directorios en el directorio personal
-config_dirs=(bspwm sxhkd polybar)
-personal_dirs=(WallPapers ConfigFiles GitRepos Desktop powerlevel10k)
+config_dirs=(polybar rofi nvim sxhkd bspwm kitty)
+personal_dirs=(WallPapers ConfigFiles GitRepos powerlevel10k)
 for dir in "${config_dirs[@]}"; do
     echo "Creando Directorio: ~/.config/$dir"
     mkdir -p ~/.config/"$dir"
@@ -91,87 +90,54 @@ curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip 
 
 echo "Descomprimiendo archivo de configuración y eliminando archivo zip..."
 cd ~/ConfigFiles/
-
-echo "Descomprimiendo archivo de configuración y eliminando archivo zip..."
-cd ~/ConfigFiles/
 unzip config.zip
 
-### Hasta aca solo son instalacion de paquets
-### Aqui comienza la personalizacion 
-# Instalar fuentes Nerd Fonts Hack
+echo "Instalando Fuentes"
 cd /usr/share/fonts/nerd-fonts
 sudo curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip
 sudo unzip Hack.zip
 
-# Copiando Fuentes empleadas en PolyBar
 sudo cp ~/ConfigFiles/polybar/fonts/* /usr/share/fonts/polybar/
 fc-cache -f -v
 
 echo "Cambiando shell predeterminada..."
 sudo usermod --shell $(which zsh) $USER
 sudo usermod --shell $(which zsh) root
-#chsh -s $(which zsh)
-
-cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
-cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
-
-#cat <<EOF >> ~/.config/bspwm/bspwmrc
-#
-### Configuracion Personalizada ###
-# Configuración de bspwm
-# Se establece el ancho del borde de las ventanas en 1 píxel
-bspc config border_width 1
-
-# Ejecución de polybar
-# Se ejecuta el script de inicio de polybar, que se encuentra en la ruta especificada
-/home/zeus/.config/polybar/./launch.sh
-
-# Compositor de ventanas
-# Se ejecuta picom, que es un compositor de ventanas que proporciona transparencia
-picom &
-
-# Establecimiento del fondo de pantalla
-# Se establece el fondo de pantalla con una imagen específica, que se encuentra en la ruta especificada
-feh --bg-fill ~/WallPapers/Wall_OnePiece.png &
-EOF
-
-sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
-sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
-
-echo "Se cargara zsh, ingrese exit para continuar"
-#pause
-#zsh
 
 echo "Copiando archivos de configuración de polybar y bin..."
 cp -r ~/ConfigFiles/bin ~/.config/
 cp -r ~/ConfigFiles/zshrc/zshrc ~/.zshrc
 cp -r ~/ConfigFiles/p10k/p10k.zsh  ~/.p10k.zsh
-cp -r ~/ConfigFiles/polybar ~/.config/
-cp -r ~/ConfigFiles/rofi ~/.config/
-cp -r ~/ConfigFiles/nvim ~/.config/
-#cp -r ~/ConfigFiles/picom ~/.config/
-#cp -r ~/ConfigFiles/sxhkd ~/.config/
-#cp -r ~/ConfigFiles/bspwm ~/.config/
-#cp -r ~/ConfigFiles/kitty ~/.config/
+cp -r ~/ConfigFiles/polybar/* ~/.config/polybar
+cp -r ~/ConfigFiles/rofi/* ~/.config/rofi
+cp -r ~/ConfigFiles/nvim/* ~/.config/nvim
+cp -r ~/ConfigFiles/sxhkd/* ~/.config/sxhkd
+cp -r ~/ConfigFiles/bspwm/* ~/.config/bspwm
+cp -r ~/ConfigFiles/kitty/* ~/.config/kitty
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
-sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
 sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
+sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
+sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
 sed -i "s/picom &/#picom &/" ~/.config/sxhkd/sxhkdrc
+
+sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
+
+sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+
 
 echo "Copia archivos a Root"
 sudo mkdir -p /root/.config/nvim
 sudo mkdir -p /root/powerlevel10k
 
-sudo cp -r ~/ConfigFiles/zshrc/zshrc /root/.zshrc
-sudo cp -r ~/ConfigFiles/p10k/p10k.zsh  /root/.p10k.zsh
+sudo ln -s ~/.zshrc /root/.zshrc
+sudo ln -s ~/.p10k.zsh  /root/.p10k.zsh
 sudo cp -r ~/ConfigFiles/nvim/* /root/.config/nvim
 sudo cp -r ~/powerlevel10k/* /root/powerlevel10k
 
