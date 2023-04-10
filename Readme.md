@@ -4,6 +4,8 @@ Repositorio de Scripts para Instalación de Arch Linux
 Este repositorio contiene una serie de scripts útiles para la instalación y configuración de Arch Linux. A continuación, se describe brevemente cada uno de ellos.
 Es necesario contar con el medio de instalacion oficial de ArchLinux, pudiendo emplear el primer sctipt para su intalacion, realizar esta de forma manual o bien empleando archinstall.
 
+![Entorno general](entorno_general.png "Captura del entorno desplegado"){: width="400" height="300"}
+
 ## Requisitos mínimos para instalar Arch Linux con los scripts presentados
 
 - Una computadora con arquitectura de 64 bits.
@@ -13,6 +15,17 @@ Es necesario contar con el medio de instalacion oficial de ArchLinux, pudiendo e
 - Conocimientos básicos de línea de comandos y particionamiento de discos.
 - Los scripts presentados en este repositorio.
 - Un medio de instalación de Arch Linux (como un USB o un CD).
+
+### La presente configuracion esta testeada en maquina virtual con VmWare
+
+### Neofetch
+La imagen muestra una captura de pantalla de Neofetch, un comando de línea de terminal que muestra información del sistema, como la distribución de Linux, la versión del kernel, el hardware, la memoria y más.
+![Neofetch](neofetch.png "Captura de pantalla del ambiente, empleando el comando fetch para obtener información de la distribución"){: width="400" height="300"}
+
+
+## Visualizacion de recursos consumidos empleando Btop y Htop para recuperar esta informacion
+![captura de pantalla de htop](ruta/a/la/imagen/htop.png "captura de pantalla de htop"){: width="400" height="300"}
+![captura de pantalla de btop](ruta/a/la/imagen/btop.png "captura de pantalla de btop"){: width="400" height="300"}
 
 
 ## Script 1: install_SistemaBaseArchLinux.sh
@@ -37,6 +50,7 @@ curl -sSfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/install_We
 
 ### Nota de reconocimiento
 
-La presentación del entorno utiliza herramientas como Polybar, bspwm, rofi y sxhkd, y se ha basado en los tutoriales presentados por S4vitar en su canal de YouTube. Queremos agradecer y reconocer el excelente trabajo de S4vitar en la comunidad de Linux, sus tutoriales han sido de gran ayuda para la creación de este entorno.
+La presentación del entorno utiliza herramientas como Polybar, bspwm, rofi, sxhkd, y se ha basado en los tutoriales presentados por S4vitar en su canal de YouTube. 
+Queremos agradecer y reconocer el excelente trabajo de S4vitar en la comunidad de CyberSeguridad en Español, sus tutoriales de introduccion a Linux, preparacion de ambientes (Parrot OS / ArchLinux) han sido de gran ayuda para la creación de este entorno.
 
 Si deseas conocer más sobre el trabajo de S4vitar, te invitamos a visitar su canal de YouTube en el siguiente enlace: [https://www.youtube.com/@s4vitar](https://www.youtube.com/@s4vitar)
