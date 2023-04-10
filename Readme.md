@@ -4,7 +4,7 @@ Repositorio de Scripts para Instalación de Arch Linux
 Este repositorio contiene una serie de scripts útiles para la instalación y configuración de Arch Linux. A continuación, se describe brevemente cada uno de ellos.
 Es necesario contar con el medio de instalacion oficial de ArchLinux, pudiendo emplear el primer sctipt para su intalacion, realizar esta de forma manual o bien empleando archinstall.
 
-![Entorno general](entorno_general.png "Captura del entorno desplegado"){: width="400" height="300"}
+![Entorno general](entorno-general.png "Captura del entorno desplegado"){: width="400" height="300"}
 
 ## Requisitos mínimos para instalar Arch Linux con los scripts presentados
 
