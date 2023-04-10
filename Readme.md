@@ -35,3 +35,8 @@ curl -sSfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Install_En
 # Descarga e instala el script install_WebDev.sh
 curl -sSfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/install_WebDev.sh | bash -
 
+### Nota de reconocimiento
+
+La presentación del entorno utiliza herramientas como Polybar, bspwm, rofi y sxhkd, y se ha basado en los tutoriales presentados por S4vitar en su canal de YouTube. Queremos agradecer y reconocer el excelente trabajo de S4vitar en la comunidad de Linux, sus tutoriales han sido de gran ayuda para la creación de este entorno.
+
+Si deseas conocer más sobre el trabajo de S4vitar, te invitamos a visitar su canal de YouTube en el siguiente enlace: [https://www.youtube.com/@s4vitar](https://www.youtube.com/@s4vitar)
