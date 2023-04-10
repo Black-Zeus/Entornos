@@ -1,0 +1,112 @@
+LIstado de Atajos BsPwm
+
+Atajos de teclado independientes de WM
+	Super + Return: Abre un emulador de terminal (Kitty)
+	Super + d: Abre un lanzador de programas (rofi) para ejecutar aplicaciones
+	Super + Escape: Hace que sxhkd recargue sus archivos de configuración
+
+Atajos de teclado de BSPWM
+	Super + Alt + q: Cierra BSPWM
+	Super + Alt + r: Reinicia BSPWM
+	Super + w: Cierra la ventana actual
+	Super + Shift + w: Cierra y mata la ventana actual
+	Super + m: Cambia entre el diseño en mosaico y monocle
+	Super + y: Envía el nodo marcado más reciente al nodo preseleccionado más reciente
+	Super + g: Intercambia el nodo actual con la ventana más grande
+
+Estado/banderas
+	Super + t: Establece el estado de la ventana como en mosaico (tiled)
+	Super + Shift + t: Establece el estado de la ventana como en mosaico falso (pseudo_tiled)
+	Super + s: Establece el estado de la ventana como flotante (floating)
+	Super + f: Establece el estado de la ventana como pantalla completa (fullscreen)
+	Super + Ctrl + m: Establece la marca del nodo
+	Super + Ctrl + x: Establece la ventana como bloqueada
+	Super + Ctrl + y: Establece la ventana como pegajosa
+	Super + Ctrl + z: Establece la ventana como privada.
+
+Enfoque/intercambio
+	Super + t: Establece el estado del nodo como en mosaico (tiled), lo que significa que el nodo ocupará una porción de la pantalla junto con otros nodos.
+	Super + Shift + t: Establece el estado del nodo como en mosaico falso (pseudo_tiled), lo que significa que el nodo se comportará como si estuviera en mosaico, pero no compartirá espacio con otros nodos.
+	Super + s: Establece el estado del nodo como flotante (floating), lo que significa que el nodo será libre y no estará restringido a una posición específica en la pantalla.
+	Super + f: Establece el estado del nodo como pantalla completa (fullscreen), lo que significa que el nodo ocupará toda la pantalla.
+	Super + Ctrl + m: Establece la marca del nodo.
+	Super + Ctrl + x: Establece la bandera de bloqueo del nodo, lo que significa que el nodo no se puede mover o cambiar de tamaño.
+	Super + Ctrl + y: Establece la bandera pegajosa del nodo, lo que significa que el nodo permanecerá visible en todas las áreas de trabajo.
+	Super + Ctrl + z: Establece la bandera privada del nodo, lo que significa que el nodo no se mostrará en el selector de escritorio.
+	Super + h: Mueve el enfoque del nodo hacia el oeste.
+	Super + j: Mueve el enfoque del nodo hacia el sur.
+	Super + k: Mueve el enfoque del nodo hacia el norte.
+	Super + l: Mueve el enfoque del nodo hacia el este.
+	Super + Shift + h: Intercambia el nodo actual con el nodo ubicado al oeste.
+	Super + Shift + j: Intercambia el nodo actual con el nodo ubicado al sur.
+	Super + Shift + k: Intercambia el nodo actual con el nodo ubicado al norte.
+	Super + Shift + l: Intercambia el nodo actual con el nodo ubicado al este.
+	Super + p: Establece la preselección de dirección del nodo.
+	Super + Ctrl + 1-9: Establece la preselección de la relación de tamaño del nodo.
+	Super + Ctrl + Espacio: Cancela la preselección del nodo seleccionado.
+	Super + Ctrl + Shift + Espacio: Cancela la preselección del escritorio seleccionado.
+	Super + Alt + h: Mueve el borde izquierdo del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + Alt + j: Mueve el borde inferior del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + Alt + k: Mueve el borde superior del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + Alt + l: Mueve el borde derecho del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + Alt + Shift + h: Mueve el borde izquierdo del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+	Super + Alt + Shift + j: Mueve el borde inferior del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+	Super + Alt + j: Enfoca el nodo anterior en el enfoque actual.
+	Super + Alt + k: Enfoca el siguiente nodo en el enfoque actual.
+	Super + Alt + h: Intercambia el nodo actual con el nodo anterior en el enfoque actual.
+	Super + Alt + l: Intercambia el nodo actual con el siguiente nodo en el enfoque actual.
+	Super + Ctrl + Return: Intercambia el nodo actual con el nodo principal.
+	Super + Shift + Enter: Intercambia el nodo actual con el nodo más reciente.
+	Super + Ctrl + Shift + {h,j,k,l}: Intercambia el nodo actual con el nodo en la dirección especificada
+
+Preselección
+	Preseleccionar dirección:
+		Super + Ctrl + h: Preseleccionar hacia el oeste (izquierda)
+		Super + Ctrl + j: Preseleccionar hacia el sur (abajo)
+		Super + Ctrl + k: Preseleccionar hacia el norte (arriba)
+		Super + Ctrl + l: Preseleccionar hacia el este (derecha)
+		
+	Preseleccionar ratio:
+		Super + Ctrl + 1: Preseleccionar un ratio de 0.1
+		Super + Ctrl + 2: Preseleccionar un ratio de 0.2
+		Super + Ctrl + 3: Preseleccionar un ratio de 0.3
+		Super + Ctrl + 4: Preseleccionar un ratio de 0.4
+		Super + Ctrl + 5: Preseleccionar un ratio de 0.5
+		Super + Ctrl + 6: Preseleccionar un ratio de 0.6
+		Super + Ctrl + 7: Preseleccionar un ratio de 0.7
+		Super + Ctrl + 8: Preseleccionar un ratio de 0.8
+		Super + Ctrl + 9: Preseleccionar un ratio de 0.9
+		
+	Cancelar preselección:
+		Super + Ctrl + space: Cancelar preselección para el nodo enfocado
+		Super + Ctrl + Shift + space: Cancelar preselección para el escritorio enfocado.
+
+Mover/redimensionar
+	Super + alt + h: Mueve el borde izquierdo del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + alt + j: Mueve el borde inferior del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + alt + k: Mueve el borde superior del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + alt + l: Mueve el borde derecho del nodo hacia afuera, lo que resulta en una mayor cantidad de espacio para otros nodos.
+	Super + alt + Shift + h: Mueve el borde izquierdo del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+	Super + alt + Shift + j: Mueve el borde inferior del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+	Super + alt + Shift + k: Mueve el borde superior del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+	Super + alt + Shift + l: Mueve el borde derecho del nodo hacia adentro, lo que resulta en una menor cantidad de espacio para otros nodos.
+  
+  
+  
+Atajos para Kitty
+	Atajos de movimiento y redimensionamiento de ventana:
+		ctrl+left: Mover la ventana hacia la izquierda.
+		ctrl+right: Mover la ventana hacia la derecha.
+		ctrl+up: Mover la ventana hacia arriba.
+		ctrl+down: Mover la ventana hacia abajo.
+
+	Atajos de Portapapeles (ClibBoard):
+		f1: Copiar la selección actual al buffer "a".
+		f2: Pegar desde el buffer "a".
+		f3: Copiar la selección actual al buffer "b".
+		f4: Pegar desde el buffer "b".
+
+	Gestion de ventana y terminal:
+		ctrl+shift+z: Alternar el diseño de la ventana entre "pila" y "rejilla".
+		ctrl+shift+enter: Abrir una nueva ventana con el directorio actual.
+		ctrl+shift+t: Abrir una nueva pestaña con el directorio actual.
