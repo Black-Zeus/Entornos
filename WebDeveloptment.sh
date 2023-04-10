@@ -1,88 +1,75 @@
 #!/bin/bash
 
-# Instalación de los paquetes necesarios para construir paru
+# Actualización del sistema operativo
+sudo pacman -Syu --noconfirm
+
+# Instalación de paquetes de Pacman
+## Desarrollo
 sudo pacman -S --noconfirm --needed base-devel git
 
-# Clonación del repositorio de paru
+## Servidor web
+sudo pacman -S --noconfirm --needed apache php php-apache mysql php-mysql
+
+## Desarrollo web
+sudo pacman -S --noconfirm --needed composer nodejs npm
+
+## Python
+sudo pacman -S --noconfirm --needed python
+
+## Navegadores web
+sudo pacman -S --noconfirm --needed firefox google-chrome
+
+## Otras herramientas
+sudo pacman -S --noconfirm --needed code dbeaver cherrytree spyder
+
+# Instalación de Paru
+cd /tmp
 git clone https://aur.archlinux.org/paru.git
-
-# Cambio de directorio al repositorio de paru
 cd paru
-
-# Compilación y construcción de paru
 makepkg -si --noconfirm
-
-# Eliminación del directorio del repositorio de paru
 cd ..
 rm -rf paru
 
-# Instalación de Apache y PHP
-sudo pacman -S --noconfirm --needed apache php php-apache
+# Instalación de paquetes con Paru
+paru -S --noconfirm --needed postman-bin gitkraken insomnia
 
-# Configuración de Apache
+# Eliminación de paquetes no requeridos
+sudo pacman -Rs --noconfirm gtk2-perl
+
+# Limpieza de caché de paquetes
+sudo pacman -Scc --noconfirm
+
+# Habilitación de servicios
 sudo systemctl enable httpd
-sudo systemctl start httpd
-
-# Instalación de MySQL y PHP-MySQL
-sudo pacman -S --noconfirm --needed mysql php-mysql
-
-# Instalación de Composer
-sudo pacman -S --noconfirm --needed composer
-
-# Instalación de Laravel
-composer global require "laravel/installer"
-
-# Agregar la ruta global de Composer al PATH
-echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc
-source ~/.bashrc
-
-# Instalación de Python
-sudo pacman -S --noconfirm --needed python
-
-# Instalación de Git
-sudo pacman -S --noconfirm --needed git
-
-# Instalación de Postman
-paru -S --noconfirm --needed postman-bin
-
-# Instalación de Node.js y npm
-sudo pacman -S --noconfirm --needed nodejs npm
-
-# Instalación de Visual Studio Code
-sudo pacman -S --noconfirm --needed code
-
-# Instalación de GitKraken
-paru -S --noconfirm --needed gitkraken
-
-# Instalación de Insomnia
-paru -S --noconfirm --needed insomnia
-
-# Instalación de Docker
-sudo pacman -S --noconfirm --needed docker docker-compose
 sudo systemctl enable docker
+
+# Inicio de servicios
+sudo systemctl start httpd
 sudo systemctl start docker
 
-# Instalación de DBeaver
-paru -S --noconfirm --needed dbeaver
+# Agregar la ruta global de Composer al PATH
+# Listar todos los archivos terminados en rc en el directorio home del usuario
+echo "Seleccione el archivo rc en el que desea agregar la línea:"
+select rc_file in ~/.*rc
+do
+  # Verificar si se seleccionó un archivo válido
+  if [[ ! -f $rc_file ]]; then
+    echo "Archivo no válido. Intente de nuevo."
+    continue
+  fi
+  
+  # Verificar si la línea ya existe en el archivo
+  if grep -q 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' "$rc_file"; then
+    echo "La línea ya existe en el archivo seleccionado."
+  else
+    # Agregar la línea al final del archivo
+    echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> "$rc_file"
+    echo "La línea se agregó con éxito al archivo seleccionado."
+    source $rc_file
+  fi
 
-# Instalación de CherryTree
-sudo pacman -S --noconfirm --needed cherrytree
+  break
+done
 
-# Instalación de VS Code para Python
-code --install-extension ms-python.python
+echo "Configuracion Ambiente de Desarrollo web terminado."
 
-# Instalación de Spyder
-sudo pacman -S --noconfirm --needed spyder
-
-# Instalación de Firefox
-sudo pacman -S --noconfirm --needed firefox
-
-# Instalación de Google Chrome
-paru -S --noconfirm --needed google-chrome
-
-# Limpieza de caché de paquetes
-sudo pacman -Scc --noconfirm
-
-
-# Limpieza de caché de paquetes
-sudo pacman -Scc --noconfirm
