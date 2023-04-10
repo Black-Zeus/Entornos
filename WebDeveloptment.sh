@@ -43,7 +43,7 @@ sudo pacman -S --noconfirm --needed python
 sudo pacman -S --noconfirm --needed git
 
 # Instalación de Postman
-yay -S --noconfirm --needed postman-bin
+paru -S --noconfirm --needed postman-bin
 
 # Instalación de Node.js y npm
 sudo pacman -S --noconfirm --needed nodejs npm
@@ -52,10 +52,10 @@ sudo pacman -S --noconfirm --needed nodejs npm
 sudo pacman -S --noconfirm --needed code
 
 # Instalación de GitKraken
-yay -S --noconfirm --needed gitkraken
+paru -S --noconfirm --needed gitkraken
 
 # Instalación de Insomnia
-yay -S --noconfirm --needed insomnia
+paru -S --noconfirm --needed insomnia
 
 # Instalación de Docker
 sudo pacman -S --noconfirm --needed docker docker-compose
@@ -63,7 +63,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 # Instalación de DBeaver
-yay -S --noconfirm --needed dbeaver
+paru -S --noconfirm --needed dbeaver
 
 # Instalación de CherryTree
 sudo pacman -S --noconfirm --needed cherrytree
@@ -78,7 +78,7 @@ sudo pacman -S --noconfirm --needed spyder
 sudo pacman -S --noconfirm --needed firefox
 
 # Instalación de Google Chrome
-yay -S --noconfirm --needed google-chrome
+paru -S --noconfirm --needed google-chrome
 
 # Limpieza de caché de paquetes
 sudo pacman -Scc --noconfirm
