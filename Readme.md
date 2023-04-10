@@ -24,8 +24,8 @@ La imagen muestra una captura de pantalla de Neofetch, un comando de línea de t
 
 
 ## Visualizacion de recursos consumidos empleando Btop y Htop para recuperar esta informacion
-![captura de pantalla de htop](htop.png "captura de pantalla de htop")
-![captura de pantalla de btop](btop.png "captura de pantalla de btop")
+![captura de pantalla de htop](htop.PNG "captura de pantalla de htop")
+![captura de pantalla de btop](btop.PNG "captura de pantalla de btop")
 
 ## Script 1: install_SistemaBaseArchLinux.sh
 Este script se encarga de la instalación del sistema base de Arch Linux. Primero, verifica que el sistema esté conectado a internet y, a continuación, actualiza los repositorios e instala los paquetes necesarios para realizar la instalación. Luego, crea las particiones necesarias en el disco duro y formatea las mismas con el sistema de archivos elegido por el usuario. Por último, instala el bootloader GRUB y reinicia el sistema.
