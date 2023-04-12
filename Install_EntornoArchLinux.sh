@@ -33,7 +33,7 @@ echo "Instalando herramientas de red..."
 sudo pacman -Sy --needed --noconfirm net-tools
 
 echo "Instalando gestores de ventanas y escritorios..."
-sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar  picom
+sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar  #picom
 
 echo "Instalando terminales..."
 sudo pacman -Sy --needed --noconfirm kitty zsh
@@ -67,24 +67,27 @@ echo "Creando directorios necesarios..."
 # Directorios en el directorio personal
 config_dirs=(polybar rofi nvim sxhkd bspwm kitty)
 personal_dirs=(WallPapers ConfigFiles GitRepos powerlevel10k)
+system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts  fonts/polybar)
+
+echo "Creando Directorios de Configuracion"
 for dir in "${config_dirs[@]}"; do
     echo "Creando Directorio: ~/.config/$dir"
     mkdir -p ~/.config/"$dir"
 done
+
+echo "Creando Directorios Personales"
 for dir in "${personal_dirs[@]}"; do
     echo "Creando Directorio: ~/$dir"
     mkdir -p ~/"$dir"
 done
 
-# Directorios del sistema
-system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts  fonts/polybar)
+echo "Creando Directorios del sistema"
 for dir in "${system_dirs[@]}"; do
     echo "Creando Directorio: /usr/share/$dir"
     sudo mkdir -p "/usr/share/$dir"
 done
 
 echo "Descargando imagen de fondo de pantalla y archivo de configuración..."
-
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png -o ~/WallPapers/Wall_OnePiece.png
 curl -sfL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip -o ~/ConfigFiles/config.zip
 
@@ -120,17 +123,19 @@ cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Actualizando configuración..."
+echo "Corrigiendo ~/.config/sxhkd/sxhkdrc"
 sed -i 's|urxvt|'"$(which kitty)"'|g' ~/.config/sxhkd/sxhkdrc
 sed -i "s+/opt/kitty/bin/kitty+$(which kitty)+" ~/.config/sxhkd/sxhkdrc
 sed -i 's/super + @space/super + d/g' ~/.config/sxhkd/sxhkdrc
 sed -i 's/dmenu_run/rofi -show run/g' ~/.config/sxhkd/sxhkdrc
-sed -i "s/picom &/#picom &/" ~/.config/sxhkd/sxhkdrc
 
-sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
+echo "Corrigiendo ~/.config/bspwm/bspwmrc"
+sed -i "s/picom &/#picom &/" ~/.config/bspwm/bspwmrc
+#sed -i 's/pgrep -x sxhkd > \/dev\/null || sxhkd &/pkill sxhkd\nsxhkd \&/' ~/.config/bspwm/bspwmrc
 sed -i "s+/usr/share/custonTheme/hell_wallpaper.jpg+~/WallPapers/Wall_OnePiece.png+g" ~/.config/bspwm/bspwmrc
 
+echo "Corrigiendo ~/.zshrc"
 sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
-
 
 echo "Copia archivos a Root"
 sudo mkdir -p /root/.config/nvim
@@ -142,12 +147,13 @@ sudo cp -r ~/ConfigFiles/nvim/* /root/.config/nvim
 sudo cp -r ~/powerlevel10k/* /root/powerlevel10k
 
 echo "Otorgando permisos de ejecución..."
-find ~/.config -type f -name "*.sh" -exec chmod +x {} \;
-chmod +x ~/.config/polybar/scripts/*
+find ~/.config -type f -name "*.sh" -exec bash -c 'echo "Modificando permisos de: $1"; chmod +x "$1"' bash {} \;
+for archivo in ~/.config/polybar/scripts/*; do echo "Modificando permisos de: $archivo"; chmod +x "$archivo"; done
+
 
 # Eliminar archivos Innecesarios
 sudo rm -rf /usr/share/fonts/nerd-fonts/{*.zip,*.md}
-rm -rf ~/ConfigFiles/config.zip
+rm -rf ~/ConfigFiles
 
 localectl set-x11-keymap es
 
