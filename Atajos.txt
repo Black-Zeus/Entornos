@@ -110,3 +110,7 @@ Atajos para Kitty
 		ctrl+shift+z: Alternar el diseño de la ventana entre "pila" y "rejilla".
 		ctrl+shift+enter: Abrir una nueva ventana con el directorio actual.
 		ctrl+shift+t: Abrir una nueva pestaña con el directorio actual.
+
+	Zoom (Agrandar / encoger la fuente de la terminal):
+		ctrl+shift+ +: Agrandar Fuente.
+		ctrl+shift+ -: Encoger Fuente.
