@@ -66,7 +66,9 @@ echo "Instalando paquetes base..."
 sudo pacman -Sy --needed --noconfirm base base-devel
 
 echo "Instalando herramientas de red..."
-sudo pacman -Sy --needed --noconfirm net-tools nmcli
+sudo pacman -Sy --needed --noconfirm net-tools networkmanager
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
 
 echo "Instalando gestores de ventanas y escritorios..."
 sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar 
