@@ -1,0 +1,24 @@
+# Audio
+sudo pacman -S --needed --noconfirm pulseaudio pulseaudio-bluetooth pulseaudio-alsa alsa-utils pamixer 
+
+Brillo
+sudo pacman -S --needed --noconfirm brightnessctl 
+
+#Notificaciones
+sudo pacman -S --needed --noconfirm dunst dunstify 
+
+#Como gestor de aerchivo, cambiar caja por thunair
+sudo pacman -S --needed --noconfirm thunar thunar-archive-plugin 
+
+#Bloqueo de pantalla
+sudo pacman -S --needed --noconfirm betterlockscreen xautolock
+
+#Clipboard avanzado
+sudo pacman -S --needed --noconfirm xclip
+
+#Ocio Cmatrx
+sudo pacman -S --needed --noconfirm cmatrix
+
+#Ocio Picom
+sudo pacman -S --needed --noconfirm picom
+
