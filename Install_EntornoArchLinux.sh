@@ -136,8 +136,9 @@ echo "Instalando herramientas Picom"
 sudo pacman -S --needed --noconfirm picom
 
 echo "Instalacion de paru Package AUR (Arch User Repository) "
-git clone https://aur.archlinux.org/paru.git -C /tmp
-cd /tmp/paru
+cd /tmp
+git clone https://aur.archlinux.org/paru.git
+cd paru
 makepkg -si
 
 echo "Actualizando la base de datos de archivos..."
