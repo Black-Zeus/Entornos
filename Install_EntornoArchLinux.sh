@@ -26,7 +26,7 @@ sudo pacman -Sy --needed --noconfirm xorg xorg-server
 if [ "$choice" = "1" ]; then
   # Instalar Xfce y Thunar con algunos plugins útiles
   sudo pacman -Sy --needed --noconfirm xfce4 thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs
-  sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
+  sudo pacman -Sy --needed --noconfirm lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
   # Habilitar el servicio de LightDM, que es el gestor de sesiones de Xfce
   sudo systemctl enable lightdm.service
