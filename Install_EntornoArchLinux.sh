@@ -236,6 +236,10 @@ chmod +x ~/.config/bin/*
 sudo rm -rf /usr/share/fonts/nerd-fonts/{*.zip,*.md}
 rm -rf ~/ConfigFiles
 
+rm ~/.config/polybar/scripts/powermenu*
+ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu
+ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu_alt
+
 localectl set-x11-keymap es
 
 # Terminamos la instalacion
