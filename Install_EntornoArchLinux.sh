@@ -24,7 +24,7 @@ done
 # Instalar el entorno de escritorio correspondiente según la opción del usuario
 sudo pacman -Sy --needed --noconfirm xorg xorg-server 
 if [ "$choice" = "1" ]; then
-  # Instalar Xfce y Thunar con algunos plugins útiles
+  echo #Instalar Xfce y Thunar con algunos plugins útiles#
   sudo pacman -Sy --needed --noconfirm xfce4 thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs
   sudo pacman -Sy --needed --noconfirm lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
@@ -66,7 +66,7 @@ echo "Instalando paquetes base..."
 sudo pacman -Sy --needed --noconfirm base base-devel
 
 echo "Instalando herramientas de red..."
-sudo pacman -Sy --needed --noconfirm net-tools
+sudo pacman -Sy --needed --noconfirm net-tools nmcli
 
 echo "Instalando gestores de ventanas y escritorios..."
 sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar 
