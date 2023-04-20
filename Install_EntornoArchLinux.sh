@@ -94,7 +94,7 @@ echo "Instalando terminales..."
 sudo pacman -Sy --needed --noconfirm kitty zsh
 
 echo "Instalando herramientas de compresión y descompresión..."
-sudo pacman -Sy --needed --noconfirm zip unrar p7zip unzip
+sudo pacman -Sy --needed --noconfirm unrar zip unzip bzip2 lzip p7zip gzip
 
 echo "Instalando herramientas de visualización de archivos..."
 sudo pacman -Sy --needed --noconfirm bat lsd feh
@@ -121,7 +121,7 @@ echo "Instalando herramientas de Notificaciones"
 sudo pacman -S --needed --noconfirm dunst dunstify 
 
 echo "Instalando herramientas de Como gestor de aerchivo, cambiar caja por thunair"
-sudo pacman -S --needed --noconfirm thunar thunar-archive-plugin  rofi
+sudo pacman -S --needed --noconfirm thunar thunar-archive-plugin  rofi file-roller
 
 #echo "Instalando herramientas de Bloqueo de pantalla"
 #sudo pacman -S --needed --noconfirm betterlockscreen xautolock
