@@ -66,7 +66,7 @@ echo "Instalando paquetes base..."
 sudo pacman -Sy --needed --noconfirm base base-devel
 
 echo "Instalando herramientas de red..."
-sudo pacman -Sy --needed --noconfirm net-tools networkmanager
+sudo pacman -Sy --needed --noconfirm net-tools networkmanager wireless_tools
 sudo systemctl enable NetworkManager
 sudo systemctl start NetworkManager
 
