@@ -185,6 +185,9 @@ sudo unzip Hack.zip
 sudo cp ~/ConfigFiles/polybar/fonts/* /usr/share/fonts/polybar/
 fc-cache -f -v
 
+git clone https://gist.github.com/85942af486eb79118467.git ~/wallpapers
+
+
 echo "Cambiando shell predeterminada..."
 sudo usermod --shell $(which zsh) $USER
 sudo usermod --shell $(which zsh) root
@@ -213,6 +216,9 @@ sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Corrigiendo ~/.zshrc"
 sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+
+echo -e "\n###\n#Aconfiguracion para WallPapers en Pantalla de Bloqueo\nbetterlockscreen -u ~/Wallpapers" >> ~/.config/sxhkd/sxhkdrc
+
 
 echo "Copia archivos a Root"
 sudo mkdir -p /root/.config/nvim
