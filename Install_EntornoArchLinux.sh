@@ -11,8 +11,8 @@ sudo pacman -Syu --noconfirm
 
 # Preguntar al usuario qué entorno de escritorio desea instalar
 echo "¿Qué entorno de escritorio deseas instalar?"
-echo "1) Xfce"
-echo "2) GNOME"
+echo "1) lightdm"
+echo "2) gdm"
 read -r choice
 
 # Validar la opción ingresada
@@ -25,14 +25,13 @@ done
 sudo pacman -Sy --needed --noconfirm xorg xorg-server 
 if [ "$choice" = "1" ]; then
   echo #Instalar Xfce y Thunar con algunos plugins útiles#
-  sudo pacman -Sy --needed --noconfirm xfce4
   sudo pacman -Sy --needed --noconfirm lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
   # Habilitar el servicio de LightDM, que es el gestor de sesiones de Xfce
   sudo systemctl enable lightdm.service
 elif [ "$choice" = "2" ]; then
   # Instalar GNOME y GDM
-  sudo pacman -Sy --needed --noconfirm gnome gdm gtkmm
+  sudo pacman -Sy --needed --noconfirm gdm gtkmm
   
   # Habilitar el servicio de GDM, que es el gestor de sesiones de GNOME
   sudo systemctl enable gdm
@@ -46,21 +45,19 @@ echo "N) No"
 read -r choice
 
 # Validar la opción ingresada
-while [[ "$choice" != "S" && "$choice" != "N" ]]; do
+while [[ "$choice" != "S" && "$choice" != "s" &&  "$choice" != "N" && "$choice" != "n" ]]; do
   echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
   read -r choice
 done
 
 # Instalar las herramientas de integración si el usuario lo desea
-if [ "$choice" = "S" ]; then
+if [ "$choice" = "S" || "$choice" = "s" ]; then
   echo "Paquetes para virtualización"
 	sudo pacman -Sy --needed --noconfirm open-vm-tools xf86-video-vmware xf86-input-vmmouse
 
 	echo "Habilitando servicio de vmtoolsd..."
 	sudo systemctl enable vmtoolsd
 fi
-
-
 
 echo "Instalando paquetes base..."
 sudo pacman -Sy --needed --noconfirm base base-devel
@@ -71,7 +68,7 @@ sudo systemctl enable NetworkManager
 sudo systemctl start NetworkManager
 
 echo "Instalando gestores de ventanas y escritorios..."
-sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar 
+sudo pacman -Sy --needed --noconfirm bspwm sxhkd polybar rofi
 
 # Preguntar al usuario si desea instalar picom
 echo "¿Deseas instalar Picom?"
@@ -80,13 +77,13 @@ echo "N) No"
 read -r choice_picom
 
 # Validar la opción ingresada
-while [[ "$choice_picom" != "S" && "$choice_picom" != "N" ]]; do
+while [[ "$choice_picom" != "S" && "$choice_picom" != "N" && "$choice_picom" != "s" && "$choice_picom" != "n" ]]; do
   echo "Opción inválida. Por favor, ingresa S para instalar Picom o N para omitir esta opción."
   read -r choice_picom
 done
 
 # Instalar picom si el usuario lo desea
-if [ "$choice_picom" = "S" ]; then
+if [ "$choice_picom" = "S" || "$choice_picom" = "s" ]; then
   sudo pacman -Sy --needed --noconfirm picom
 fi
 
@@ -118,10 +115,10 @@ echo "Instalando herramientas de Brillo"
 sudo pacman -S --needed --noconfirm brightnessctl 
 
 echo "Instalando herramientas de Notificaciones"
-sudo pacman -S --needed --noconfirm dunst dunstify 
+sudo pacman -S --needed --noconfirm dunst 
 
 echo "Instalando herramientas de Como gestor de aerchivo, cambiar caja por thunair"
-sudo pacman -S --needed --noconfirm  thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings  rofi file-roller
+sudo pacman -S --needed --noconfirm  thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings file-roller 
 
 #echo "Instalando herramientas de Bloqueo de pantalla"
 #sudo pacman -S --needed --noconfirm betterlockscreen xautolock
@@ -130,10 +127,7 @@ echo "Instalando herramientas de Clipboard avanzado"
 sudo pacman -S --needed --noconfirm xclip
 
 echo "Instalando herramientas de Varias"
-sudo pacman -S --needed --noconfirm cmatrix pinta acpi 
-
-echo "Instalando herramientas Picom"
-sudo pacman -S --needed --noconfirm picom
+sudo pacman -S --needed --noconfirm cmatrix pinta acpi  neofetch
 
 echo "Instalacion de paru Package AUR (Arch User Repository) "
 cd /tmp
@@ -147,7 +141,7 @@ sudo updatedb
 echo "Creando directorios necesarios..."
 
 # Directorios en el directorio personal
-config_dirs=(polybar rofi nvim sxhkd bspwm kitty dunst picom bin)
+config_dirs=(polybar rofi nvim sxhkd bspwm kitty dunst picom bin betterlockscreen)
 personal_dirs=(WallPapers ConfigFiles powerlevel10k)
 system_dirs=(zsh-autosuggestions zsh-sudo zsh-syntax-highlighting fonts/nerd-fonts  fonts/polybar)
 
@@ -185,7 +179,9 @@ sudo unzip Hack.zip
 sudo cp ~/ConfigFiles/polybar/fonts/* /usr/share/fonts/polybar/
 fc-cache -f -v
 
-git clone https://gist.github.com/85942af486eb79118467.git ~/wallpapers
+cd /tmp
+git clone https://gist.github.com/85942af486eb79118467.git Wallpapers
+cp Wallpapers/* ~/WallPapers/
 
 
 echo "Cambiando shell predeterminada..."
@@ -217,7 +213,7 @@ sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 echo "Corrigiendo ~/.zshrc"
 sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
 
-echo -e "\n###\n#Aconfiguracion para WallPapers en Pantalla de Bloqueo\nbetterlockscreen -u ~/Wallpapers" >> ~/.config/sxhkd/sxhkdrc
+#echo -e "\n###\n#Aconfiguracion para WallPapers en Pantalla de Bloqueo\nbetterlockscreen -u ~/Wallpapers" >> ~/.config/sxhkd/sxhkdrc
 
 
 echo "Copia archivos a Root"
