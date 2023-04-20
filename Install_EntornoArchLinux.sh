@@ -25,7 +25,7 @@ done
 sudo pacman -Sy --needed --noconfirm xorg xorg-server 
 if [ "$choice" = "1" ]; then
   echo #Instalar Xfce y Thunar con algunos plugins útiles#
-  sudo pacman -Sy --needed --noconfirm xfce4 thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings
+  sudo pacman -Sy --needed --noconfirm xfce4
   sudo pacman -Sy --needed --noconfirm lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
   # Habilitar el servicio de LightDM, que es el gestor de sesiones de Xfce
@@ -121,7 +121,7 @@ echo "Instalando herramientas de Notificaciones"
 sudo pacman -S --needed --noconfirm dunst dunstify 
 
 echo "Instalando herramientas de Como gestor de aerchivo, cambiar caja por thunair"
-sudo pacman -S --needed --noconfirm thunar thunar-archive-plugin  rofi file-roller
+sudo pacman -S --needed --noconfirm  thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings  rofi file-roller
 
 #echo "Instalando herramientas de Bloqueo de pantalla"
 #sudo pacman -S --needed --noconfirm betterlockscreen xautolock
