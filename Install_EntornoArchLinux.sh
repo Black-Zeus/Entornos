@@ -25,7 +25,7 @@ done
 sudo pacman -Sy --needed --noconfirm xorg xorg-server 
 if [ "$choice" = "1" ]; then
   echo #Instalar Xfce y Thunar con algunos plugins útiles#
-  sudo pacman -Sy --needed --noconfirm xfce4 thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs
+  sudo pacman -Sy --needed --noconfirm xfce4 thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings
   sudo pacman -Sy --needed --noconfirm lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
   # Habilitar el servicio de LightDM, que es el gestor de sesiones de Xfce
@@ -130,7 +130,7 @@ echo "Instalando herramientas de Clipboard avanzado"
 sudo pacman -S --needed --noconfirm xclip
 
 echo "Instalando herramientas de Varias"
-sudo pacman -S --needed --noconfirm cmatrix pinta
+sudo pacman -S --needed --noconfirm cmatrix pinta acpi 
 
 echo "Instalando herramientas Picom"
 sudo pacman -S --needed --noconfirm picom
