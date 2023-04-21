@@ -11,7 +11,10 @@ sudo pacman -Syu --noconfirm
 
 # Preguntar al usuario qué entorno de escritorio desea instalar
 while true; do
-  read -p "¿Qué gestor de sesión gráfica deseas instalar? (1 para Lightdm, 2 para GDM)" choice
+  
+  echo "¿Qué gestor de sesión gráfica deseas instalar? (1 para Lightdm, 2 para GDM)" 
+  read -r choice
+  
   if [[ "$choice" == "1" || "$choice" == "2" ]]; then
     break
   else
@@ -37,14 +40,10 @@ fi
 
 
 # Preguntar al usuario si desea instalar las herramientas de integración
-echo "¿Deseas instalar las herramientas de integración de VMware?"
-echo "S) Sí"
-echo "N) No"
-read -r choice
-
-# Validar la opción ingresada
 while true; do
-  read -p "¿Desea instalar las herramientas de integración? (S/N)" choice
+  echo "¿Desea instalar las herramientas de integración? (S/N)"
+  
+read -r choice
   if [[ "$choice" == "S" || "$choice" == "s" || "$choice" == "N" || "$choice" == "n" ]]; then
     break
   else
