@@ -121,10 +121,8 @@ echo "Instalando herramientas de Notificaciones"
 sudo pacman -S --needed --noconfirm dunst 
 
 echo "Instalando herramientas de Como gestor de aerchivo, cambiar caja por thunair"
-sudo pacman -S --needed --noconfirm  thunar thunar-volman thunar-archive-plugin thunar-shares-plugin thunar-media-tags-plugin thunar-vcs-plugin gvfs xfce4-power-manager-settings file-roller 
-
-#echo "Instalando herramientas de Bloqueo de pantalla"
-#sudo pacman -S --needed --noconfirm betterlockscreen xautolock
+#thunar-shares-plugin thunar-vcs-plugin 
+sudo pacman -S --needed --noconfirm  thunar thunar-volman thunar-archive-plugin thunar-media-tags-plugin gvfs xfce4-power-manager file-roller 
 
 echo "Instalando herramientas de Clipboard avanzado"
 sudo pacman -S --needed --noconfirm xclip
@@ -137,6 +135,9 @@ cd /tmp
 git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si
+
+echo "Instalando herramientas de Bloqueo de pantalla (con Paru)"
+paru --noconfirm -S betterlockscreen xautolock google-chrome
 
 echo "Actualizando la base de datos de archivos..."
 sudo updatedb
@@ -202,12 +203,15 @@ cp -r ~/ConfigFiles/bspwm/* ~/.config/bspwm
 cp -r ~/ConfigFiles/kitty/* ~/.config/kitty
 cp -r ~/ConfigFiles/dunst/* ~/.config/dunst
 cp -r ~/ConfigFiles/picom/* ~/.config/picom
+cp -r ~/ConfigFiles/rofi/* ~/.config/rofi
+
+#Asignando fondo pantalla LigthDM
+sed -i 's/^#background=.*/background=~/WallPapers/cNB7Li.jpg/' /etc/lightdm/lightdm-gtk-greeter.conf
 
 # Instalar Rofi si el usuario lo desea
-if [ "$choice_rofi" = "S" ]; then
-  cp -r ~/ConfigFiles/rofi/* ~/.config/rofi
+if [ "$choice_picom" = "S" ]; then
+  sed -i '/^picom -f/s/^/#/' ~/.config/bspwm/bspwmrc
 fi
-
 
 echo "Copiando archivos de powerlevel10k y zsh_modulos"
 cp -r ~/ConfigFiles/powerlevel10k ~/
@@ -216,17 +220,15 @@ sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 echo "Corrigiendo ~/.zshrc"
 sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
 
-#echo -e "\n###\n#Aconfiguracion para WallPapers en Pantalla de Bloqueo\nbetterlockscreen -u ~/Wallpapers" >> ~/.config/sxhkd/sxhkdrc
-
-
-echo "Copia archivos a Root"
+echo "Creando directorios de Root"
 sudo mkdir -p /root/.config/nvim
 sudo mkdir -p /root/powerlevel10k
 
-#sudo cp -R ~/.config /root/.config
-
+ech "Generando LInks simbolicos para root"
 sudo ln -s ~/.zshrc /root/.zshrc
 sudo ln -s ~/.p10k.zsh  /root/.p10k.zsh
+
+echo "Copia archivos a Root"
 sudo cp -r ~/ConfigFiles/nvim/* /root/.config/nvim
 sudo cp -r ~/powerlevel10k/* /root/powerlevel10k
 
@@ -237,14 +239,20 @@ chmod +x ~/.config/polybar/launch.sh
 chmod +x ~/.config/polybar/scripts/*
 chmod +x ~/.config/bin/*
 
-# Eliminar archivos Innecesarios
+echo "Eliminar archivos Innecesarios"
 sudo rm -rf /usr/share/fonts/nerd-fonts/{*.zip,*.md}
 rm -rf ~/ConfigFiles
 
+echo "Generando Link Simbolico para power.sh"
 rm ~/.config/polybar/scripts/powermenu*
 ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu
 ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu_alt
 
+echo "LImpiando Cache"
+sudo pacman -Scc
+paru -Scc
+
+echo "Establecer teclado a espanol"
 localectl set-x11-keymap es
 
 # Terminamos la instalacion
