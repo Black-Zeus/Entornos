@@ -49,10 +49,15 @@ echo "N) No"
 read -r choice
 
 # Validar la opción ingresada
-while [[ "$choice" != "S" && "$choice" != "s" &&  "$choice" != "N" && "$choice" != "n" ]]; do
-  echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
-  read -r choice
+while true; do
+  read -p "¿Desea instalar las herramientas de integración? (S/N)" choice
+  if [[ "$choice" == "S" || "$choice" == "s" || "$choice" == "N" || "$choice" == "n" ]]; then
+    break
+  else
+    echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
+  fi
 done
+
 
 # Instalar las herramientas de integración si el usuario lo desea
 if [ "$choice" = "S" || "$choice" = "s" ]; then
