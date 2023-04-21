@@ -40,27 +40,27 @@ elif [ "$choice" = "2" ]; then
 fi
 
 
-# Preguntar al usuario si desea instalar las herramientas de integración
-echo "¿Deseas instalar las herramientas de integración de VMware?"
-echo "S) Sí"
-echo "N) No"
-read -r choice
-
 # Validar la opción ingresada
-while [[ "$choice" != "S" && "$choice" != "s" &&  "$choice" != "N" && "$choice" != "n" ]]; do
-  echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
-  read -r choice
+while true; do
+  read -p "¿Deseas instalar las herramientas de integración? (S/N): " choice
+  case "$choice" in
+    s|S) 
+      echo "Instalando paquetes para virtualización..."
+      sudo pacman -Sy --needed --noconfirm open-vm-tools xf86-video-vmware xf86-input-vmmouse
+      echo "Habilitando servicio de vmtoolsd..."
+      sudo systemctl enable vmtoolsd
+      break
+      ;;
+    n|N)
+      echo "Omitiendo la instalación de herramientas de integración."
+      break
+      ;;
+    *)
+      echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
+      ;;
+  esac
 done
 
-
-# Instalar las herramientas de integración si el usuario lo desea
-if [ "$choice" = "S" || "$choice" = "s" ]; then
-  echo "Paquetes para virtualización"
-	sudo pacman -Sy --needed --noconfirm open-vm-tools xf86-video-vmware xf86-input-vmmouse
-
-	echo "Habilitando servicio de vmtoolsd..."
-	sudo systemctl enable vmtoolsd
-fi
 
 echo "Instalando paquetes base..."
 sudo pacman -Sy --needed --noconfirm base base-devel
