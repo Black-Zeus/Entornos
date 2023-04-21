@@ -10,18 +10,12 @@ sudo pacman -Syu --noconfirm
 
 
 # Preguntar al usuario qué entorno de escritorio desea instalar
-echo "¿Qué entorno de escritorio deseas instalar?"
-echo "1) lightdm"
-echo "2) gdm"
-read -r choice
-
-# Validar la opción ingresada
 while true; do
-  read -p "¿Qué entorno de escritorio deseas instalar? (1 para Xfce, 2 para GNOME)" choice
+  read -p "¿Qué gestor de sesión gráfica deseas instalar? (1 para Lightdm, 2 para GDM)" choice
   if [[ "$choice" == "1" || "$choice" == "2" ]]; then
     break
   else
-    echo "Opción inválida. Por favor, ingresa 1 para instalar Xfce o 2 para instalar GNOME."
+    echo "Opción inválida. Por favor, ingresa 1 para Lightdm o 2 para GDM."
   fi
 done
 
