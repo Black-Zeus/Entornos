@@ -10,16 +10,15 @@ sudo pacman -Syu --noconfirm
 
 
 # Preguntar al usuario qué entorno de escritorio desea instalar
-while true; do
-  
-  echo "¿Qué gestor de sesión gráfica deseas instalar? (1 para Lightdm, 2 para GDM)" 
+echo "¿Qué Gestor de sesion deseas instalar?"
+echo "1) lightdm"
+echo "2) gdm"
+read -r choice
+
+# Validar la opción ingresada
+while [[ "$choice" != "1" && "$choice" != "2" ]]; do
+  echo "Opción inválida. Por favor, ingresa 1 para instalar Xfce o 2 para instalar GNOME."
   read -r choice
-  
-  if [[ "$choice" == "1" || "$choice" == "2" ]]; then
-    break
-  else
-    echo "Opción inválida. Por favor, ingresa 1 para Lightdm o 2 para GDM."
-  fi
 done
 
 # Instalar el entorno de escritorio correspondiente según la opción del usuario
@@ -40,15 +39,15 @@ fi
 
 
 # Preguntar al usuario si desea instalar las herramientas de integración
-while true; do
-  echo "¿Desea instalar las herramientas de integración? (S/N)"
-  
+echo "¿Deseas instalar las herramientas de integración de VMware?"
+echo "S) Sí"
+echo "N) No"
 read -r choice
-  if [[ "$choice" == "S" || "$choice" == "s" || "$choice" == "N" || "$choice" == "n" ]]; then
-    break
-  else
-    echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
-  fi
+
+# Validar la opción ingresada
+while [[ "$choice" != "S" && "$choice" != "s" &&  "$choice" != "N" && "$choice" != "n" ]]; do
+  echo "Opción inválida. Por favor, ingresa S para instalar las herramientas de integración o N para omitir esta opción."
+  read -r choice
 done
 
 
