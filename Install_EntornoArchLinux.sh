@@ -128,7 +128,7 @@ echo "Instalando herramientas de Clipboard avanzado"
 sudo pacman -S --needed --noconfirm xclip
 
 echo "Instalando herramientas de Varias"
-sudo pacman -S --needed --noconfirm cmatrix pinta acpi  neofetch
+sudo pacman -S --needed --noconfirm cmatrix pinta acpi  neofetch pluma Mousepad
 
 echo "Instalacion de paru Package AUR (Arch User Repository) "
 cd /tmp
