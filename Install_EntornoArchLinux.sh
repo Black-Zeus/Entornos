@@ -16,9 +16,13 @@ echo "2) gdm"
 read -r choice
 
 # Validar la opción ingresada
-while [[ "$choice" != "1" && "$choice" != "2" ]]; do
-  echo "Opción inválida. Por favor, ingresa 1 para instalar Xfce o 2 para instalar GNOME."
-  read -r choice
+while true; do
+  read -p "¿Qué entorno de escritorio deseas instalar? (1 para Xfce, 2 para GNOME)" choice
+  if [[ "$choice" == "1" || "$choice" == "2" ]]; then
+    break
+  else
+    echo "Opción inválida. Por favor, ingresa 1 para instalar Xfce o 2 para instalar GNOME."
+  fi
 done
 
 # Instalar el entorno de escritorio correspondiente según la opción del usuario
