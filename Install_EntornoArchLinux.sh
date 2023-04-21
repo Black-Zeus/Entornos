@@ -134,7 +134,7 @@ echo "Instalacion de paru Package AUR (Arch User Repository) "
 cd /tmp
 git clone https://aur.archlinux.org/paru.git
 cd paru
-makepkg -si
+makepkg -si --noconfirm
 
 echo "Instalando herramientas de Bloqueo de pantalla (con Paru)"
 paru --noconfirm -S betterlockscreen xautolock google-chrome
@@ -249,8 +249,8 @@ ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu
 ln ~/.config/bspwm/scripts/power.sh ~/.config/polybar/scripts/powermenu_alt
 
 echo "LImpiando Cache"
-sudo pacman -Scc
-paru -Scc
+sudo pacman -Scc  --noconfirm
+paru -Scc --noconfirm
 
 echo "Establecer teclado a espanol"
 localectl set-x11-keymap es
