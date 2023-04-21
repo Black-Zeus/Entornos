@@ -14,6 +14,8 @@ echo "¿Qué Gestor de sesion deseas instalar?"
 echo "1) lightdm"
 echo "2) gdm"
 read -r choice
+echo $choice
+pause
 
 # Validar la opción ingresada
 while [[ "$choice" != "1" && "$choice" != "2" ]]; do
