@@ -257,3 +257,4 @@ localectl set-x11-keymap es
 
 # Terminamos la instalacion
 echo "¡Listo! La instalación ha finalizado. reinicie para continuar"
+neofetch
