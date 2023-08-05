@@ -218,7 +218,9 @@ cp -r ~/ConfigFiles/powerlevel10k ~/
 sudo cp -r ~/ConfigFiles/zsh_modul/zsh-* /usr/share/
 
 echo "Corrigiendo ~/.zshrc"
+current_user=$(whoami)
 sed -i "s/alias cat='batcat'/alias cat='bat'/" ~/.zshrc
+sed -i "s/zeus/$current_user/g" ~/.zshrc
 
 echo "Creando directorios de Root"
 sudo mkdir -p /root/.config/nvim
