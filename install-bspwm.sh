@@ -61,7 +61,17 @@ sudo pacman -S --noconfirm \
     xclip xsel \
     redshift \
     imagemagick \
-    arc-gtk-theme papirus-icon-theme materia-gtk-theme
+    materia-gtk-theme adapta-gtk-theme papirus-icon-theme
+
+print_info "Paquetes base instalados"
+
+# Instalar arc-gtk-theme desde AUR con yay
+print_step "Instalando temas adicionales desde AUR..."
+if command -v yay &> /dev/null; then
+    yay -S --noconfirm arc-gtk-theme 2>/dev/null || print_warning "arc-gtk-theme no disponible, usando alternativas"
+else
+    print_warning "yay no está instalado, saltando arc-gtk-theme"
+fi
 
 print_info "Paquetes instalados correctamente"
 
@@ -357,7 +367,7 @@ echo ""
 print_step "Próximos pasos:"
 echo ""
 echo "  1. Reinicia el sistema:"
-echo "     ${GREEN}sudo reboot${NC}"
+echo "     sudo reboot"
 echo ""
 echo "  2. En LightDM, selecciona 'BSPWM' antes de iniciar sesión"
 echo ""
@@ -372,10 +382,8 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Limpiar directorio temporal
 cd ~
 print_info "Limpiando archivos temporales..."
-# rm -rf ~/AutoBspwmKali  # Comentado por si quieres revisar algo
 
 print_warning "Presiona Enter para continuar..."
 read
