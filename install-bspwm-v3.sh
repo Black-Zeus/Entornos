@@ -4,7 +4,7 @@
 #                                                                                                   #
 # Script de Instalación BSPWM para Arch Linux                                                      #
 # Autor: Black-Zeus                                                                                #
-# Versión: 4.1 - Optimizado (Keys más rápido)                                                     #
+# Versión: 4.2 - Optimizado + Polybar config.ini fix                                              #
 #                                                                                                   #
 #####################################################################################################
 
@@ -62,7 +62,7 @@ function show_banner() {
 ║   ██████╔╝███████║██║     ╚███╔███╔╝██║ ╚═╝ ██║                    ║
 ║   ╚═════╝ ╚══════╝╚═╝      ╚══╝╚══╝ ╚═╝     ╚═╝                    ║
 ║                                                                      ║
-║       Instalador Automatizado v4.1 (Optimizado)                     ║
+║       Instalador Automatizado v4.2 (Optimizado)                     ║
 ║                     By: Black-Zeus                                  ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝
@@ -315,33 +315,167 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 bspc monitor -d 1 2 3 4 5 6 7 8 9 10
 bspc config border_width 2
 bspc config window_gap 12
+bspc config focus_follows_pointer true
+bspc config normal_border_color "#44475a"
+bspc config focused_border_color "#bd93f9"
 EOF
     chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
     
     # sxhkdrc
     cat > "$USER_HOME/.config/sxhkd/sxhkdrc" << 'EOF'
+# Terminal
 super + Return
     kitty
+
+# Launcher
 super + d
     rofi -show drun
+
+# Reload sxhkd
+super + Escape
+    pkill -USR1 -x sxhkd
+
+# Quit/Restart bspwm
 super + shift + {q,r}
     bspc {quit,wm -r}
+
+# Close window
 super + shift + c
     bspc node -c
+
+# Focus direction
 super + {h,j,k,l}
     bspc node -f {west,south,north,east}
+
+# Switch desktop
 super + {1-9,0}
     bspc desktop -f '^{1-9,10}'
+
+# Move to desktop
+super + shift + {1-9,0}
+    bspc node -d '^{1-9,10}'
+
+# Fullscreen
 super + f
     bspc node -t ~fullscreen
+
+# Floating
+super + shift + space
+    bspc node -t ~floating
 EOF
     
-    # Polybar
+    # Polybar config.ini (CRÍTICO: nombre correcto)
     mkdir -p "$USER_HOME/.config/polybar"
+    
+    # Eliminar config viejo si existe
+    rm -f "$USER_HOME/.config/polybar/config"
+    
+    cat > "$USER_HOME/.config/polybar/config.ini" << 'EOF'
+;==========================================================
+; Polybar Config
+;==========================================================
+
+[colors]
+background = #282a36
+background-alt = #44475a
+foreground = #f8f8f2
+primary = #bd93f9
+secondary = #ff79c6
+alert = #ff5555
+disabled = #6272a4
+
+[bar/main]
+width = 100%
+height = 30
+radius = 0
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+separator = |
+separator-foreground = ${colors.disabled}
+
+font-0 = JetBrainsMono Nerd Font:size=10;2
+font-1 = Font Awesome 6 Free Solid:size=10;2
+
+modules-left = bspwm xwindow
+modules-center = date
+modules-right = memory cpu
+
+cursor-click = pointer
+
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %name%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+
+label-occupied = %name%
+label-occupied-padding = 2
+
+label-urgent = %name%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-empty = %name%
+label-empty-foreground = ${colors.disabled}
+label-empty-padding = 2
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:50:...%
+
+[module/date]
+type = internal/date
+interval = 1
+date = %H:%M
+date-alt = %Y-%m-%d %H:%M:%S
+label = %date%
+label-foreground = ${colors.primary}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.primary}
+label = %percentage_used:2%%
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.primary}
+label = %percentage:2%%
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = true
+EOF
+    
+    # Polybar launch.sh
     cat > "$USER_HOME/.config/polybar/launch.sh" << 'EOF'
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Terminate already running bar instances
 killall -q polybar
-polybar main &
+
+# Wait until the processes have been shut down
+while pgrep -x polybar >/dev/null; do sleep 1; done
+
+# Launch polybar
+echo "---" | tee -a /tmp/polybar.log
+polybar main 2>&1 | tee -a /tmp/polybar.log & disown
+
+echo "Polybar launched..."
 EOF
     chmod +x "$USER_HOME/.config/polybar/launch.sh"
     
@@ -349,11 +483,12 @@ EOF
     sudo tee /usr/share/xsessions/bspwm.desktop > /dev/null << EOF
 [Desktop Entry]
 Name=BSPWM
+Comment=Binary Space Partitioning Window Manager
 Exec=$USER_HOME/.xinitrc
 Type=Application
 EOF
     
-    print_info "Configs creadas\n"
+    print_info "Configs creadas (Polybar: config.ini ✓)\n"
     sleep 0.5
 }
 
@@ -405,13 +540,20 @@ function show_summary() {
     echo -e "${CYAN}[i]${NC} Log: ${PURPLE}$LOG_FILE${NC}\n"
     echo -e "${YELLOW}Próximos pasos:${NC}"
     echo -e "  1. ${PURPLE}sudo reboot${NC}"
-    echo -e "  2. Selecciona ${GREEN}BSPWM${NC} en LightDM\n"
+    echo -e "  2. Selecciona ${GREEN}BSPWM${NC} en LightDM"
+    echo -e "  3. Polybar aparecerá automáticamente\n"
     
-    echo -e "${YELLOW}Atajos:${NC}"
-    echo -e "  • Super + Enter → Terminal"
-    echo -e "  • Super + D → Rofi\n"
+    echo -e "${YELLOW}Atajos principales:${NC}"
+    echo -e "  • Super + Enter       → Terminal (Kitty)"
+    echo -e "  • Super + D           → Rofi (lanzador)"
+    echo -e "  • Super + Shift + C   → Cerrar ventana"
+    echo -e "  • Super + Shift + R   → Recargar BSPWM"
+    echo -e "  • Super + [1-9,0]     → Cambiar escritorio"
+    echo -e "  • Super + F           → Fullscreen\n"
     
     fastfetch 2>/dev/null || neofetch 2>/dev/null || true
+    
+    echo ""
 }
 
 # Main
@@ -419,12 +561,13 @@ function main() {
     show_banner
     
     echo -e "${YELLOW}[!]${NC} Instalación 100% automática y RÁPIDA"
-    echo -e "${YELLOW}[!]${NC} Validación de firmas DESHABILITADA temporalmente\n"
+    echo -e "${YELLOW}[!]${NC} Validación de firmas DESHABILITADA temporalmente"
+    echo -e "${YELLOW}[!]${NC} Polybar configurado como ${GREEN}config.ini${NC} (no 'config')\n"
     echo -e "${CYAN}Presiona Enter para comenzar...\n${NC}"
     read
     
     detect_virtualization
-    disable_signature_check  # ← CLAVE: Deshabilita firmas
+    disable_signature_check
     fix_pacman
     update_system
     install_display_manager
@@ -440,7 +583,7 @@ function main() {
     configure_zsh
     enable_services
     cleanup
-    restore_signature_check  # ← Restaura firmas
+    restore_signature_check
     show_summary
 }
 
