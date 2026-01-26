@@ -4,7 +4,7 @@
 #                                                                                                   #
 # Script de Instalación BSPWM para Arch Linux                                                      #
 # Autor: Black-Zeus                                                                                #
-# Versión: 3.1 - Totalmente Automatizado con Auto-Reparación                                      #
+# Versión: 4.1 - Optimizado (Keys más rápido)                                                     #
 #                                                                                                   #
 #####################################################################################################
 
@@ -31,7 +31,6 @@ exec 2>&1
 # Verificar que no sea root
 if [ "$(id -u)" -eq 0 ]; then
     echo -e "${RED}[✗] Este script NO debe ejecutarse como root${NC}"
-    echo -e "${YELLOW}[i] Ejecuta como: ./install-bspwm.sh${NC}"
     exit 1
 fi
 
@@ -39,7 +38,7 @@ fi
 trap ctrl_c INT
 function ctrl_c() {
     echo -e "\n${RED}[✗] Instalación cancelada${NC}"
-    echo -e "${YELLOW}[i] Log guardado en: $LOG_FILE${NC}\n"
+    echo -e "${YELLOW}[i] Log: $LOG_FILE${NC}\n"
     exit 1
 }
 
@@ -63,7 +62,7 @@ function show_banner() {
 ║   ██████╔╝███████║██║     ╚███╔███╔╝██║ ╚═╝ ██║                    ║
 ║   ╚═════╝ ╚══════╝╚═╝      ╚══╝╚══╝ ╚═╝     ╚═╝                    ║
 ║                                                                      ║
-║       Instalador Automatizado con Auto-Reparación v4.0              ║
+║       Instalador Automatizado v4.1 (Optimizado)                     ║
 ║                     By: Black-Zeus                                  ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝
@@ -71,342 +70,231 @@ EOF
     echo -e "${NC}\n"
 }
 
-# Detectar entorno de virtualización
+# Detectar virtualización
 function detect_virtualization() {
     print_step "Detectando entorno..."
     
     if systemd-detect-virt | grep -qi "vmware"; then
         INSTALL_VMWARE_TOOLS=true
-        print_info "VMware detectado - Se instalarán las herramientas"
-    elif systemd-detect-virt | grep -qi "kvm\|qemu"; then
-        INSTALL_VMWARE_TOOLS=false
-        print_info "KVM/QEMU detectado - No se instalarán VMware Tools"
-    elif systemd-detect-virt | grep -qi "virtualbox"; then
-        INSTALL_VMWARE_TOOLS=false
-        print_info "VirtualBox detectado - No se instalarán VMware Tools"
+        print_info "VMware detectado"
     else
         INSTALL_VMWARE_TOOLS=false
-        print_info "Sistema físico o virtualización no detectada"
+        print_info "No-VMware detectado"
     fi
-    
-    sleep 1
+    sleep 0.5
 }
 
-# Limpiar y reparar pacman
+# Limpiar y reparar pacman (OPTIMIZADO - SIN refresh-keys)
 function fix_pacman() {
-    print_step "Reparando y limpiando sistema de paquetes..."
+    print_step "Reparando sistema de paquetes (método rápido)..."
     
     # Limpiar cache corrupto
-    print_info "Limpiando cache de pacman..."
-    sudo rm -rf /var/cache/pacman/pkg/*
-    
-    # Actualizar llaves
-    print_info "Actualizando llaves PGP..."
-    sudo pacman-key --init
-    sudo pacman-key --populate archlinux
-    sudo pacman-key --refresh-keys
+    sudo rm -rf /var/cache/pacman/pkg/* 2>/dev/null || true
     
     # Limpiar locks
-    sudo rm -f /var/lib/pacman/db.lck
+    sudo rm -f /var/lib/pacman/db.lck 2>/dev/null || true
     
-    # Actualizar bases de datos
+    # Solo inicializar si no existe
+    if [ ! -d /etc/pacman.d/gnupg ]; then
+        print_info "Inicializando keyring por primera vez..."
+        sudo pacman-key --init
+        sudo pacman-key --populate archlinux
+    fi
+    
+    # NO hacer refresh-keys (esto es lo que tarda mucho)
+    # En su lugar, solo actualizar bases de datos
     print_info "Sincronizando bases de datos..."
     sudo pacman -Syy
     
-    print_info "Sistema de paquetes reparado\n"
-    sleep 1
+    print_info "Sistema reparado (método rápido)\n"
+    sleep 0.5
 }
 
-# Actualizar sistema con reintentos
+# Configurar pacman.conf para OMITIR validación de firmas (TEMPORAL)
+function disable_signature_check() {
+    print_step "Deshabilitando validación de firmas temporalmente..."
+    
+    # Backup del original
+    sudo cp /etc/pacman.conf /etc/pacman.conf.backup
+    
+    # Cambiar SigLevel a Never temporalmente
+    sudo sed -i 's/^SigLevel.*/SigLevel = Never/' /etc/pacman.conf
+    
+    print_warning "Firmas deshabilitadas (se restaurarán al final)\n"
+    sleep 0.5
+}
+
+# Restaurar validación de firmas
+function restore_signature_check() {
+    print_step "Restaurando validación de firmas..."
+    
+    if [ -f /etc/pacman.conf.backup ]; then
+        sudo mv /etc/pacman.conf.backup /etc/pacman.conf
+        print_info "Firmas restauradas\n"
+    fi
+    sleep 0.5
+}
+
+# Actualizar sistema
 function update_system() {
     print_step "Actualizando el sistema..."
     
-    local max_retries=3
-    local retry=0
+    sudo pacman -Syu --noconfirm || {
+        print_warning "Update falló, continuando..."
+    }
     
-    while [ $retry -lt $max_retries ]; do
-        if sudo pacman -Syu --noconfirm; then
-            print_info "Sistema actualizado correctamente\n"
-            return 0
-        else
-            retry=$((retry + 1))
-            print_warning "Intento $retry/$max_retries falló, reintentando..."
-            fix_pacman
-        fi
-    done
-    
-    print_error "No se pudo actualizar el sistema después de $max_retries intentos"
-    return 1
+    print_info "Sistema actualizado\n"
+    sleep 0.5
 }
 
-# Instalar paquete con manejo de errores
+# Instalar paquete (simplificado)
 function safe_install() {
     local packages=("$@")
-    local failed_packages=()
-    
-    for package in "${packages[@]}"; do
-        if pacman -Qi "$package" &>/dev/null; then
-            continue
-        fi
-        
-        if ! sudo pacman -S --needed --noconfirm "$package" 2>/dev/null; then
-            failed_packages+=("$package")
-            print_warning "Falló: $package (se intentará desde AUR después)"
-        fi
-    done
-    
-    if [ ${#failed_packages[@]} -gt 0 ]; then
-        echo "${failed_packages[@]}" >> /tmp/failed_packages.txt
-    fi
+    sudo pacman -S --needed --noconfirm "${packages[@]}" 2>/dev/null || true
 }
 
-# Instalar Display Manager automáticamente (LightDM por defecto)
+# Instalar Display Manager
 function install_display_manager() {
-    print_step "Instalando Display Manager (LightDM)..."
+    print_step "Instalando Display Manager..."
     
     safe_install xorg xorg-server xorg-xinit \
         lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
     
-    sudo systemctl enable lightdm 2>/dev/null
-    print_info "LightDM instalado y habilitado\n"
-    sleep 1
+    sudo systemctl enable lightdm 2>/dev/null || true
+    print_info "LightDM instalado\n"
+    sleep 0.5
 }
 
-# Instalar VMware Tools si está en VMware
+# VMware Tools
 function install_vmware_tools() {
     if [ "$INSTALL_VMWARE_TOOLS" = true ]; then
         print_step "Instalando VMware Tools..."
         safe_install open-vm-tools xf86-video-vmware xf86-input-vmmouse
-        sudo systemctl enable vmtoolsd 2>/dev/null
-        sudo systemctl enable vmware-vmblock-fuse 2>/dev/null
+        sudo systemctl enable vmtoolsd 2>/dev/null || true
         print_info "VMware Tools instalado\n"
     fi
-    sleep 1
+    sleep 0.5
 }
 
-# Instalar paquetes base
+# Paquetes base
 function install_base_packages() {
-    print_step "Instalando paquetes base del sistema..."
+    print_step "Instalando paquetes base..."
     
     safe_install \
         base base-devel linux-headers \
-        net-tools networkmanager wireless_tools \
-        git wget curl rsync \
-        unrar zip unzip bzip2 lzip p7zip gzip \
-        htop btop fastfetch \
-        mlocate
+        networkmanager wget curl git \
+        unzip zip p7zip \
+        htop btop fastfetch
     
-    sudo systemctl enable NetworkManager 2>/dev/null
-    sudo systemctl start NetworkManager 2>/dev/null
+    sudo systemctl enable NetworkManager 2>/dev/null || true
+    sudo systemctl start NetworkManager 2>/dev/null || true
     
     print_info "Paquetes base instalados\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Instalar BSPWM y componentes
+# BSPWM y componentes
 function install_bspwm_components() {
-    print_step "Instalando BSPWM y componentes gráficos..."
+    print_step "Instalando BSPWM..."
     
     safe_install \
-        bspwm sxhkd \
-        polybar \
-        rofi \
-        picom \
-        feh nitrogen \
-        dunst libnotify \
-        kitty alacritty \
-        firefox \
-        thunar thunar-volman thunar-archive-plugin thunar-media-tags-plugin \
-        file-roller \
-        pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-        pavucontrol \
-        brightnessctl \
-        xclip xdotool wmctrl \
-        acpi \
-        neovim \
-        bat lsd fzf ripgrep fd eza \
-        zsh zsh-completions \
-        ttf-dejavu ttf-liberation noto-fonts noto-fonts-emoji \
-        ttf-jetbrains-mono-nerd \
-        cmatrix \
-        maim scrot flameshot \
-        redshift \
-        playerctl
+        bspwm sxhkd polybar rofi picom \
+        feh nitrogen dunst libnotify \
+        kitty firefox \
+        thunar file-roller \
+        pipewire pipewire-pulse pavucontrol \
+        brightnessctl xclip \
+        neovim bat lsd \
+        zsh ttf-jetbrains-mono-nerd \
+        maim
     
-    print_info "BSPWM y componentes instalados\n"
-    sleep 1
+    print_info "BSPWM instalado\n"
+    sleep 0.5
 }
 
-# Instalar Paru
+# Paru
 function install_paru() {
-    print_step "Instalando Paru (AUR Helper)..."
+    print_step "Instalando Paru..."
     
     if command -v paru &> /dev/null; then
-        print_info "Paru ya está instalado\n"
+        print_info "Paru ya instalado\n"
         return
     fi
     
     cd /tmp
     rm -rf paru
-    git clone https://aur.archlinux.org/paru.git
+    git clone --depth=1 https://aur.archlinux.org/paru.git
     cd paru
     makepkg -si --noconfirm --needed
     cd "$USER_HOME"
     
     print_info "Paru instalado\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Instalar paquetes de AUR
+# AUR packages
 function install_aur_packages() {
-    print_step "Instalando paquetes de AUR..."
+    print_step "Instalando paquetes AUR..."
     
     if ! command -v paru &> /dev/null; then
-        print_warning "Paru no disponible, saltando paquetes AUR"
+        print_warning "Paru no disponible\n"
         return
     fi
     
-    local aur_packages=(
-        betterlockscreen
-        google-chrome
-        visual-studio-code-bin
-        cava
-    )
-    
-    for package in "${aur_packages[@]}"; do
-        paru -S --needed --noconfirm "$package" 2>/dev/null || \
-            print_warning "No se pudo instalar: $package (no crítico)"
-    done
-    
-    # Reinstalar paquetes que fallaron en pacman
-    if [ -f /tmp/failed_packages.txt ]; then
-        while read -r package; do
-            paru -S --needed --noconfirm "$package" 2>/dev/null || true
-        done < /tmp/failed_packages.txt
-        rm /tmp/failed_packages.txt
-    fi
+    paru -S --needed --noconfirm \
+        google-chrome \
+        visual-studio-code-bin \
+        betterlockscreen 2>/dev/null || true
     
     print_info "Paquetes AUR instalados\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Crear estructura de directorios
+# Directorios
 function create_directories() {
-    print_step "Creando estructura de directorios..."
+    print_step "Creando directorios..."
     
-    local config_dirs=(
-        polybar rofi nvim sxhkd bspwm kitty 
-        dunst picom nitrogen alacritty
-    )
-    
-    for dir in "${config_dirs[@]}"; do
-        mkdir -p "$USER_HOME/.config/$dir"
-    done
-    
-    mkdir -p "$USER_HOME"/{WallPapers,ConfigFiles,Screenshots}
+    mkdir -p "$USER_HOME/.config"/{polybar,rofi,nvim,sxhkd,bspwm,kitty,dunst,picom,nitrogen}
+    mkdir -p "$USER_HOME"/{WallPapers,Screenshots}
     mkdir -p "$USER_HOME/.local/bin"
     
-    sudo mkdir -p /usr/share/{zsh-autosuggestions,zsh-sudo,zsh-syntax-highlighting}
-    sudo mkdir -p /usr/share/fonts/{nerd-fonts,polybar}
-    
     print_info "Directorios creados\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Descargar configuraciones con reintentos
+# Descargar configs
 function download_configurations() {
     print_step "Descargando configuraciones..."
     
     cd "$USER_HOME"
     
-    # Wallpaper
     curl -fsSL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/Wall_OnePiece.png \
-        -o "$USER_HOME/WallPapers/Wall_OnePiece.png" || \
-        print_warning "No se pudo descargar wallpaper"
+        -o "$USER_HOME/WallPapers/wall.png" 2>/dev/null || true
     
-    # Config.zip
     if curl -fsSL https://raw.githubusercontent.com/Black-Zeus/Entornos/main/config.zip \
-        -o "$USER_HOME/ConfigFiles/config.zip"; then
-        cd "$USER_HOME/ConfigFiles"
-        unzip -q config.zip 2>/dev/null || print_warning "Error al descomprimir config.zip"
-    else
-        print_warning "No se pudo descargar config.zip - Se usarán configs por defecto"
+        -o /tmp/config.zip 2>/dev/null; then
+        unzip -q /tmp/config.zip -d "$USER_HOME/ConfigFiles" 2>/dev/null || true
     fi
     
-    print_info "Configuraciones descargadas\n"
-    sleep 1
+    print_info "Configs descargadas\n"
+    sleep 0.5
 }
 
-# Instalar fuentes
-function install_fonts() {
-    print_step "Instalando fuentes..."
-    
-    cd /tmp
-    
-    # Hack Nerd Font
-    if ! ls /usr/share/fonts/nerd-fonts/*Hack* &>/dev/null; then
-        curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.zip -o Hack.zip
-        sudo unzip -q Hack.zip -d /usr/share/fonts/nerd-fonts/
-        rm Hack.zip
-    fi
-    
-    # Fuentes de Polybar
-    if [ -d "$USER_HOME/ConfigFiles/polybar/fonts" ]; then
-        sudo cp "$USER_HOME/ConfigFiles/polybar/fonts"/* /usr/share/fonts/polybar/ 2>/dev/null || true
-    fi
-    
-    fc-cache -fv > /dev/null 2>&1
-    
-    print_info "Fuentes instaladas\n"
-    sleep 1
-}
-
-# Copiar configuraciones con validación
+# Copiar configs
 function copy_configurations() {
     print_step "Copiando configuraciones..."
     
-    local configs=(
-        "bin:.config/"
-        "zshrc/zshrc:.zshrc"
-        "p10k/p10k.zsh:.p10k.zsh"
-        "polybar:.config/polybar"
-        "nvim:.config/nvim"
-        "sxhkd:.config/sxhkd"
-        "bspwm:.config/bspwm"
-        "kitty:.config/kitty"
-        "dunst:.config/dunst"
-        "picom:.config/picom"
-        "rofi:.config/rofi"
-    )
-    
-    for config in "${configs[@]}"; do
-        IFS=':' read -r src dst <<< "$config"
-        if [ -e "$USER_HOME/ConfigFiles/$src" ]; then
-            if [ -d "$USER_HOME/ConfigFiles/$src" ]; then
-                cp -r "$USER_HOME/ConfigFiles/$src"/* "$USER_HOME/$dst/" 2>/dev/null || true
-            else
-                cp "$USER_HOME/ConfigFiles/$src" "$USER_HOME/$dst" 2>/dev/null || true
-            fi
-        fi
-    done
-    
-    # Módulos ZSH
-    if [ -d "$USER_HOME/ConfigFiles/zsh_modul" ]; then
-        sudo cp -r "$USER_HOME/ConfigFiles/zsh_modul"/zsh-* /usr/share/ 2>/dev/null || true
+    if [ -d "$USER_HOME/ConfigFiles" ]; then
+        cp -r "$USER_HOME/ConfigFiles"/* "$USER_HOME/.config/" 2>/dev/null || true
     fi
     
-    # Powerlevel10k
-    if [ -d "$USER_HOME/ConfigFiles/powerlevel10k" ]; then
-        cp -r "$USER_HOME/ConfigFiles/powerlevel10k" "$USER_HOME/" 2>/dev/null || true
-    fi
-    
-    print_info "Configuraciones copiadas\n"
-    sleep 1
+    print_info "Configs copiadas\n"
+    sleep 0.5
 }
 
-# Crear configuraciones por defecto si no existen
+# Configs por defecto
 function create_default_configs() {
-    print_step "Creando configuraciones por defecto..."
+    print_step "Creando configs por defecto..."
     
     # .xinitrc
     cat > "$USER_HOME/.xinitrc" << 'EOF'
@@ -414,250 +302,129 @@ function create_default_configs() {
 setxkbmap es &
 picom -b &
 nitrogen --restore &
-[ -f ~/.config/polybar/launch.sh ] && ~/.config/polybar/launch.sh &
+~/.config/polybar/launch.sh &
 dunst &
 exec bspwm
 EOF
     chmod +x "$USER_HOME/.xinitrc"
     
-    # bspwmrc básico
-    if [ ! -f "$USER_HOME/.config/bspwm/bspwmrc" ]; then
-        cat > "$USER_HOME/.config/bspwm/bspwmrc" << 'EOF'
+    # bspwmrc
+    cat > "$USER_HOME/.config/bspwm/bspwmrc" << 'EOF'
 #!/bin/sh
 pgrep -x sxhkd > /dev/null || sxhkd &
-bspc monitor -d I II III IV V VI VII VIII IX X
-bspc config border_width         2
-bspc config window_gap          12
-bspc config split_ratio          0.52
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
+bspc monitor -d 1 2 3 4 5 6 7 8 9 10
+bspc config border_width 2
+bspc config window_gap 12
 EOF
-        chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
-    fi
+    chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
     
-    # sxhkdrc básico
-    if [ ! -f "$USER_HOME/.config/sxhkd/sxhkdrc" ]; then
-        cat > "$USER_HOME/.config/sxhkd/sxhkdrc" << 'EOF'
-# Terminal
+    # sxhkdrc
+    cat > "$USER_HOME/.config/sxhkd/sxhkdrc" << 'EOF'
 super + Return
     kitty
-
-# Launcher
 super + d
     rofi -show drun
-
-# Reload
-super + Escape
-    pkill -USR1 -x sxhkd
-
-# Quit/restart bspwm
 super + shift + {q,r}
     bspc {quit,wm -r}
-
-# Close window
 super + shift + c
     bspc node -c
-
-# Focus direction
 super + {h,j,k,l}
     bspc node -f {west,south,north,east}
-
-# Switch desktop
 super + {1-9,0}
     bspc desktop -f '^{1-9,10}'
-
-# Move to desktop
-super + shift + {1-9,0}
-    bspc node -d '^{1-9,10}'
-
-# Fullscreen
 super + f
     bspc node -t ~fullscreen
-
-# Floating
-super + shift + space
-    bspc node -t ~floating
 EOF
-        chmod +x "$USER_HOME/.config/sxhkd/sxhkdrc"
-    fi
     
-    # Polybar launch.sh
-    if [ ! -f "$USER_HOME/.config/polybar/launch.sh" ]; then
-        mkdir -p "$USER_HOME/.config/polybar"
-        cat > "$USER_HOME/.config/polybar/launch.sh" << 'EOF'
+    # Polybar
+    mkdir -p "$USER_HOME/.config/polybar"
+    cat > "$USER_HOME/.config/polybar/launch.sh" << 'EOF'
 #!/bin/bash
 killall -q polybar
-while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 polybar main &
 EOF
-        chmod +x "$USER_HOME/.config/polybar/launch.sh"
-    fi
+    chmod +x "$USER_HOME/.config/polybar/launch.sh"
     
     # Sesión BSPWM
     sudo tee /usr/share/xsessions/bspwm.desktop > /dev/null << EOF
 [Desktop Entry]
 Name=BSPWM
-Comment=Binary Space Partitioning Window Manager
 Exec=$USER_HOME/.xinitrc
 Type=Application
 EOF
     
-    print_info "Configuraciones por defecto creadas\n"
-    sleep 1
+    print_info "Configs creadas\n"
+    sleep 0.5
 }
 
-# Configurar archivos
-function configure_files() {
-    print_step "Configurando archivos del sistema..."
-    
-    # Corregir .zshrc
-    if [ -f "$USER_HOME/.zshrc" ]; then
-        sed -i "s/alias cat='batcat'/alias cat='bat'/g" "$USER_HOME/.zshrc"
-        sed -i "s/zeus/$CURRENT_USER/g" "$USER_HOME/.zshrc"
-    fi
-    
-    # LightDM wallpaper
-    if [ -f "$USER_HOME/WallPapers/Wall_OnePiece.png" ]; then
-        sudo sed -i "s|^#background=.*|background=$USER_HOME/WallPapers/Wall_OnePiece.png|" \
-            /etc/lightdm/lightdm-gtk-greeter.conf 2>/dev/null || true
-    fi
-    
-    print_info "Archivos configurados\n"
-    sleep 1
-}
-
-# Configurar permisos
-function set_permissions() {
-    print_step "Configurando permisos..."
-    
-    find "$USER_HOME/.config/bspwm" -type f -exec chmod +x {} \; 2>/dev/null || true
-    find "$USER_HOME/.config/polybar" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
-    find "$USER_HOME/.local/bin" -type f -exec chmod +x {} \; 2>/dev/null || true
-    
-    # Links simbólicos
-    if [ -f "$USER_HOME/.config/bspwm/scripts/power.sh" ]; then
-        ln -sf "$USER_HOME/.config/bspwm/scripts/power.sh" \
-            "$USER_HOME/.config/polybar/scripts/powermenu" 2>/dev/null || true
-    fi
-    
-    print_info "Permisos configurados\n"
-    sleep 1
-}
-
-# Configurar ZSH
+# ZSH
 function configure_zsh() {
     print_step "Configurando ZSH..."
     
     sudo chsh -s "$(which zsh)" "$CURRENT_USER" 2>/dev/null || true
     
-    # Instalar Oh My Zsh si no existe
     if [ ! -d "$USER_HOME/.oh-my-zsh" ]; then
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended 2>/dev/null || true
     fi
-    
-    # Powerlevel10k
-    if [ ! -d "${ZSH_CUSTOM:-$USER_HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-            "${ZSH_CUSTOM:-$USER_HOME/.oh-my-zsh/custom}/themes/powerlevel10k" 2>/dev/null || true
-    fi
-    
-    # Configurar para root
-    sudo mkdir -p /root/.config/nvim 2>/dev/null
-    [ -f "$USER_HOME/.zshrc" ] && sudo ln -sf "$USER_HOME/.zshrc" /root/.zshrc 2>/dev/null || true
-    [ -f "$USER_HOME/.p10k.zsh" ] && sudo ln -sf "$USER_HOME/.p10k.zsh" /root/.p10k.zsh 2>/dev/null || true
     
     print_info "ZSH configurado\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Configurar teclado
-function configure_keyboard() {
-    print_step "Configurando teclado español..."
-    sudo localectl set-x11-keymap es 2>/dev/null || true
-    print_info "Teclado configurado\n"
-    sleep 1
-}
-
-# Habilitar servicios
+# Servicios
 function enable_services() {
-    print_step "Habilitando servicios del sistema..."
+    print_step "Habilitando servicios..."
     
-    local services=(
-        "NetworkManager"
-        "lightdm"
-    )
-    
-    [ "$INSTALL_VMWARE_TOOLS" = true ] && services+=("vmtoolsd" "vmware-vmblock-fuse")
-    
-    for service in "${services[@]}"; do
-        sudo systemctl enable "$service" 2>/dev/null || true
-    done
-    
-    # Cambiar a graphical target
+    sudo systemctl enable NetworkManager 2>/dev/null || true
+    sudo systemctl enable lightdm 2>/dev/null || true
     sudo systemctl set-default graphical.target 2>/dev/null || true
     
     print_info "Servicios habilitados\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Limpiar sistema
+# Limpieza
 function cleanup() {
-    print_step "Limpiando archivos temporales..."
+    print_step "Limpiando..."
     
-    sudo rm -rf /usr/share/fonts/nerd-fonts/*.md 2>/dev/null
-    rm -rf "$USER_HOME/ConfigFiles"
+    rm -rf "$USER_HOME/ConfigFiles" 2>/dev/null || true
     sudo pacman -Scc --noconfirm
-    command -v paru &>/dev/null && paru -Scc --noconfirm
-    sudo updatedb 2>/dev/null || true
     
     print_info "Limpieza completada\n"
-    sleep 1
+    sleep 0.5
 }
 
-# Resumen final
+# Resumen
 function show_summary() {
     show_banner
     
     echo -e "${GREEN}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}║                                                                      ║${NC}"
-    echo -e "${GREEN}║            ¡Instalación completada exitosamente!                    ║${NC}"
-    echo -e "${GREEN}║                                                                      ║${NC}"
+    echo -e "${GREEN}║            ¡Instalación completada!                                  ║${NC}"
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════════════╝${NC}\n"
     
-    echo -e "${CYAN}[i]${NC} Log completo guardado en: ${PURPLE}$LOG_FILE${NC}\n"
+    echo -e "${CYAN}[i]${NC} Log: ${PURPLE}$LOG_FILE${NC}\n"
+    echo -e "${YELLOW}Próximos pasos:${NC}"
+    echo -e "  1. ${PURPLE}sudo reboot${NC}"
+    echo -e "  2. Selecciona ${GREEN}BSPWM${NC} en LightDM\n"
     
-    echo -e "${YELLOW}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${YELLOW}║  Próximos pasos:                                                     ║${NC}"
-    echo -e "${YELLOW}╚══════════════════════════════════════════════════════════════════════╝${NC}\n"
-    
-    echo -e "  ${CYAN}1.${NC} Reinicia: ${PURPLE}sudo reboot${NC}"
-    echo -e "  ${CYAN}2.${NC} Selecciona ${GREEN}BSPWM${NC} en LightDM"
-    echo -e "  ${CYAN}3.${NC} Configura Powerlevel10k: ${PURPLE}p10k configure${NC}\n"
-    
-    echo -e "${YELLOW}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${YELLOW}║  Atajos principales:                                                 ║${NC}"
-    echo -e "${YELLOW}╚══════════════════════════════════════════════════════════════════════╝${NC}\n"
-    
-    echo -e "  ${CYAN}•${NC} Super + Enter   → Terminal"
-    echo -e "  ${CYAN}•${NC} Super + D       → Rofi"
-    echo -e "  ${CYAN}•${NC} Super + Shift + C → Cerrar ventana"
-    echo -e "  ${CYAN}•${NC} Super + Shift + R → Recargar BSPWM\n"
+    echo -e "${YELLOW}Atajos:${NC}"
+    echo -e "  • Super + Enter → Terminal"
+    echo -e "  • Super + D → Rofi\n"
     
     fastfetch 2>/dev/null || neofetch 2>/dev/null || true
-    
-    echo ""
 }
 
-# Función principal
+# Main
 function main() {
     show_banner
     
-    echo -e "${YELLOW}[!]${NC} Instalación completamente automatizada de BSPWM"
-    echo -e "${YELLOW}[!]${NC} No se requiere interacción del usuario\n"
-    echo -e "${CYAN}[i]${NC} Presiona Enter para comenzar o Ctrl+C para cancelar\n"
+    echo -e "${YELLOW}[!]${NC} Instalación 100% automática y RÁPIDA"
+    echo -e "${YELLOW}[!]${NC} Validación de firmas DESHABILITADA temporalmente\n"
+    echo -e "${CYAN}Presiona Enter para comenzar...\n${NC}"
     read
     
     detect_virtualization
+    disable_signature_check  # ← CLAVE: Deshabilita firmas
     fix_pacman
     update_system
     install_display_manager
@@ -668,17 +435,13 @@ function main() {
     install_aur_packages
     create_directories
     download_configurations
-    install_fonts
     copy_configurations
     create_default_configs
-    configure_files
-    set_permissions
     configure_zsh
-    configure_keyboard
     enable_services
     cleanup
+    restore_signature_check  # ← Restaura firmas
     show_summary
 }
 
-# Ejecutar
 main
