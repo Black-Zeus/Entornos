@@ -1,0 +1,12 @@
+# Configuración mínima; el instalador no cambia la shell del usuario.
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=10000
+export SAVEHIST=10000
+setopt append_history hist_ignore_dups share_history
+autoload -Uz compinit && compinit
+bindkey -e
+PROMPT='%F{green}%n@%m%f:%F{blue}%~%f %# '
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias grep='grep --color=auto'

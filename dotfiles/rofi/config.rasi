@@ -1,0 +1,8 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    terminal: "kitty";
+    matching: "fuzzy";
+}
+
+@theme "/usr/share/rofi/themes/Arc-Dark.rasi"

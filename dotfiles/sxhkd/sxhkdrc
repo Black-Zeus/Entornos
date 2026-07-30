@@ -1,0 +1,52 @@
+# Aplicaciones
+super + Return
+	kitty
+
+super + d
+	rofi -show drun
+
+super + shift + s
+	flameshot gui
+
+# Recargar SXHKD
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# Cerrar ventana y recargar BSPWM
+super + {q,shift + r}
+	bspc {node -c,wm -r}
+
+# Alternar fullscreen, floating y tiled
+super + {f,shift + space,t}
+	bspc node -t {fullscreen,floating,tiled}
+
+# Navegar y mover ventanas con H/J/K/L o flechas
+super + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+
+super + shift + {h,j,k,l}
+	bspc node -s {west,south,north,east}
+
+super + {Left,Down,Up,Right}
+	bspc node -f {west,south,north,east}
+
+super + shift + {Left,Down,Up,Right}
+	bspc node -s {west,south,north,east}
+
+# Navegar escritorios y enviar ventanas
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+# Mover una ventana flotante
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -v {-30 0,0 30,0 -30,30 0}
+
+# Volumen mediante PulseAudio/PipeWire Pulse
+XF86AudioRaiseVolume
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+XF86AudioLowerVolume
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+XF86AudioMute
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
