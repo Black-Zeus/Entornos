@@ -1,0 +1,4 @@
+# Borrador intencional. No forma parte de los componentes instalables todavía.
+# Las herramientas de seguridad se agregarán individualmente después de validar
+# finalidad, procedencia, licencia y disponibilidad en Parrot. No se instalarán
+# metapaquetes ofensivos ni colecciones masivas desde este archivo.

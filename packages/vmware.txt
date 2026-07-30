@@ -1,0 +1,4 @@
+# La activación de servicios es manual y está documentada; no ocurre en esta fase.
+required open-vm-tools
+required open-vm-tools-desktop
+optional fuse3

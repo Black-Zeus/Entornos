@@ -1,0 +1,8 @@
+# Formato: required|optional nombre-paquete
+required git
+required curl
+required wget
+required unzip
+required jq
+required zsh
+required tmux

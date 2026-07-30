@@ -1,0 +1,15 @@
+# Pendiente de validar con apt-cache show dentro de una VM Parrot actualizada.
+required bspwm
+required sxhkd
+required polybar
+required rofi
+required picom
+required kitty
+required dunst
+required feh
+optional nitrogen
+required thunar
+required flameshot
+required xclip
+required xdotool
+required pavucontrol
