@@ -71,6 +71,7 @@ bash tests/smoke-test.sh
 ```
 
 La auditoría original está en [docs/audit-report.md](docs/audit-report.md) y las decisiones de diseño en [docs/architecture.md](docs/architecture.md).
+La referencia completa de controles está en [docs/keyboard-shortcuts.md](docs/keyboard-shortcuts.md).
 
 ## Seguridad y autorización
 

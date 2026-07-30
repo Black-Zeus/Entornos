@@ -3,8 +3,8 @@ set -Eeuo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 required=(
-  install.sh AGENTS.md README.md
-  docs/audit-report.md docs/architecture.md docs/testing.md
+  install.sh README.md
+  docs/audit-report.md docs/architecture.md docs/testing.md docs/keyboard-shortcuts.md
   lib/common.sh lib/logging.sh lib/detect-system.sh lib/packages-apt.sh lib/repositories-apt.sh
   lib/firefox-extensions.sh assets/firefox/wappalyzer-policy.json
   lib/deploy-dotfiles.sh lib/backup.sh lib/fonts.sh lib/powerlevel10k.sh
