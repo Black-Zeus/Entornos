@@ -14,7 +14,7 @@ while IFS= read -r -d '' file; do
 done < <(find "$ROOT_DIR" \
   -path "$ROOT_DIR/.git" -prune -o \
   -path "$ROOT_DIR/legacy" -prune -o \
-  -type f -name '*.sh' -print0)
+  -type f \( -name '*.sh' -o -path "$ROOT_DIR/scripts/*" \) -print0)
 
 if (( count == 0 )); then
   printf 'ERROR: no se encontraron scripts Bash activos.\n' >&2

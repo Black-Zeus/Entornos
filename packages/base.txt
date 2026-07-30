@@ -4,5 +4,13 @@ required curl
 required wget
 required unzip
 required jq
+required bat
+required lsd
 required zsh
 required tmux
+required zsh-autosuggestions
+required zsh-syntax-highlighting
+required fzf
+required zoxide
+required direnv
+required google-chrome-stable

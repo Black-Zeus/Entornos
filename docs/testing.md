@@ -8,6 +8,9 @@ Todas las pruebas de esta fase son estáticas o trabajan en un directorio tempor
 bash tests/syntax-check.sh
 bash tests/static-analysis.sh
 bash tests/smoke-test.sh
+# Solo dentro de Parrot o Debian con los repositorios objetivo configurados:
+bash tests/package-candidates.sh
+bash tests/package-installability.sh
 git diff --check
 ```
 
@@ -21,7 +24,7 @@ git diff --check
 
 ```bash
 ./install.sh --help
-./install.sh --components base,desktop,vmware --dry-run
+./install.sh --components base,desktop,vmware,security-lab --dry-run
 ./scripts/lab-update.sh --dry-run
 ```
 
@@ -29,15 +32,27 @@ En un sistema que no sea Parrot, el segundo comando debe rechazar la ejecución.
 
 ## Matriz pendiente en VM Parrot
 
+- Reevaluar `smbclient`, `enum4linux-ng`, `theharvester`, `routersploit`, `gdb-multiarch` y `plaso`; Parrot 7.3 no resuelve actualmente sus dependencias sin forzar versiones o backports.
+- Instalar Suricata solo bajo autorización explícita: su paquete habilita `suricata.service` durante la postinstalación.
 - Confirmar `ID=parrot` y campos reales de `/etc/os-release`.
 - Validar cada nombre mediante `apt-cache show` y registrar versión disponible.
+- Confirmar Node.js 18 o superior, npm con prefijo de usuario, pipx, `rg`, `fd` y ShellCheck.
+- Confirmar autosuggestions, syntax highlighting, `Ctrl-R` con fzf, `z`, `zi`, direnv y doble `Esc` en una sesión Zsh interactiva.
+- Confirmar que `google-chrome-stable` se instala desde `https://dl.google.com/linux/chrome/deb/` y que APT valida su firma con el keyring dedicado.
+- Abrir Firefox, comprobar Wappalyzer en `about:addons` y confirmar que se instaló desde Mozilla Add-ons sin reemplazar otras políticas.
+- Verificar las herramientas del componente `security-lab` sin ejecutar ataques ni escaneos contra terceros.
 - Probar Parrot actualizado en VMware con snapshot recuperable.
 - Confirmar resolución dinámica, clipboard y sincronización horaria.
+- Confirmar que la sesión BSPWM mantiene un proceso `vmtoolsd -n vmusr` y que VMware tiene habilitado Guest Isolation para copiar/pegar.
 - Identificar nombres reales de unidades de open-vm-tools sin habilitarlas automáticamente.
 - Probar `vmhgfs-fuse` con una carpeta compartida configurada.
 - Iniciar BSPWM desde el display manager ya existente, sin reemplazarlo.
 - Verificar diez escritorios con uno y dos monitores virtuales.
 - Probar audio Pulse/PipeWire, Polybar, Rofi, Picom, Dunst y Flameshot.
+- Mantener Polybar visible durante varios ciclos de actualización y confirmar que ninguna tarjeta desaparece con `use-damage = false` en VMware.
+- Agregar varios PNG/JPEG/WebP a la carpeta de wallpapers, probar siguiente/selector y verificar la rotación automática tras 900 segundos.
+- Confirmar los 9 fondos HackerOne 1920x1080 seleccionados, `LICENSE`, `README.upstream.md` y `ATTRIBUTION.txt` tanto en `assets/` como después del despliegue.
+- Probar el bloqueo con `i3lock` y confirmar por separado cierre de sesión, reinicio y apagado desde el menú Rofi.
 - Verificar interfaces Ethernet/Wi-Fi reales para el módulo de red.
 - Probar `tun*`, `tap*` y `wg*` para estado VPN.
 - Revisar fuentes disponibles; la configuración usa `monospace` para no depender de Nerd Fonts.

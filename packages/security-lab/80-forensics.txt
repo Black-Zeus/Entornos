@@ -1,0 +1,14 @@
+# Análisis forense digital; fallos de disponibilidad no abortan el entorno base.
+optional sleuthkit
+optional autopsy
+optional volatility3
+optional foremost
+optional scalpel
+optional testdisk
+optional libimage-exiftool-perl
+optional yara
+optional hashdeep
+optional guymager
+optional dc3dd
+optional gddrescue
+optional binwalk

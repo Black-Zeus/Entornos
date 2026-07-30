@@ -38,28 +38,36 @@ deploy_component_dotfiles() {
   while IFS= read -r -d '' file; do
     relative="${file#"$source_dir/"}"
     mode=0644
-    [[ -x "$file" ]] && mode=0755
+    case "$component/$relative" in
+      bspwm/bspwmrc|polybar/launch.sh) mode=0755 ;;
+    esac
     deploy_file "$file" "$target_dir/$relative" "$mode"
   done < <(find "$source_dir" -type f -print0)
 }
 
 deploy_desktop_dotfiles() {
-  local component
+  local component wallpaper relative
   for component in bspwm sxhkd polybar rofi picom kitty dunst; do
     deploy_component_dotfiles "$component"
   done
   deploy_file "$PROJECT_ROOT/assets/wallpapers/lab-wallpaper.png" \
-    "$REAL_HOME/.local/share/backgrounds/parrot-security-lab.png" 0644
+    "$REAL_HOME/.local/share/backgrounds/parrot-security-lab/one-piece.png" 0644
+  while IFS= read -r -d '' wallpaper; do
+    relative="${wallpaper#"$PROJECT_ROOT/assets/wallpapers/hackerone/"}"
+    deploy_file "$wallpaper" \
+      "$REAL_HOME/.local/share/backgrounds/parrot-security-lab/hackerone/$relative" 0644
+  done < <(find "$PROJECT_ROOT/assets/wallpapers/hackerone" -type f -print0)
 }
 
 deploy_base_dotfiles() {
   deploy_file "$PROJECT_ROOT/dotfiles/zsh/zshrc" "$REAL_HOME/.zshrc" 0644
+  deploy_file "$PROJECT_ROOT/dotfiles/zsh/p10k.zsh" "$REAL_HOME/.p10k.zsh" 0644
   deploy_file "$PROJECT_ROOT/dotfiles/tmux/tmux.conf" "$REAL_HOME/.tmux.conf" 0644
 }
 
 deploy_lab_scripts() {
   local script
-  for script in vpn-status.sh target-status.sh screenshot.sh lab-update.sh; do
+  for script in vpn-status.sh interface-status.sh memory-status.sh target-status.sh target screenshot.sh lab-update.sh power-menu.sh wallpaper-cycle.sh; do
     deploy_file "$PROJECT_ROOT/scripts/$script" "$REAL_HOME/.local/bin/$script" 0755
   done
 }

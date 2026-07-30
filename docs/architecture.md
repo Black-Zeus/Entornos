@@ -20,7 +20,7 @@ docs/                      Diseño, auditoría y pruebas
 legacy/arch/               Historia aislada; nunca forma parte del flujo
 ```
 
-Se mantiene `security-lab.txt` como borrador no instalable. Esto evita introducir un cuarto componente vacío o instalar colecciones ofensivas sin una selección y validación explícitas.
+`security-lab` es un componente instalable y explícito. `packages/security-lab.txt` contiene los runtimes comunes y `packages/security-lab/*.txt` separa los paquetes por alcance operativo. El cargador procesa los scopes en orden y elimina duplicados; una clasificación `required` prevalece sobre `optional`. No incluye metapaquetes de distribución.
 
 ## Flujo del instalador
 
@@ -41,7 +41,7 @@ El modo interno `PARROT_INSTALLER_TESTING=1` solo funciona junto con `--dry-run`
 
 ### `base`
 
-Instala utilidades generales, Zsh y tmux. Despliega `.zshrc`, `.tmux.conf` y scripts operativos en `~/.local/bin`. No cambia la shell por defecto.
+Instala Google Chrome estable, utilidades generales, Zsh y tmux. Chrome se obtiene exclusivamente mediante el repositorio APT oficial de Google: la clave se descarga por TLS, se compara con la huella oficial `EB4C 1BFD 4F04 2F6D DDCC EC91 7721 F63B D38B 4796` y se limita al repositorio mediante `signed-by`. También combina una política de Firefox para instalar Wappalyzer firmado desde Mozilla Add-ons en modo `normal_installed`; conserva otras políticas, respalda el archivo previo y permite deshabilitar la extensión. Zsh carga Powerlevel10k, autosuggestions, syntax highlighting, fzf, zoxide y direnv; doble `Esc` alterna `sudo` sin habilitar correcciones automáticas agresivas. Despliega `.zshrc`, `.tmux.conf` y scripts operativos en `~/.local/bin`. No cambia la shell por defecto.
 
 ### `desktop`
 
@@ -54,11 +54,17 @@ Instala `open-vm-tools`, `open-vm-tools-desktop` y opcionalmente `fuse3`. La res
 Servicios que deberán verificarse y, si corresponde, activarse manualmente en una instalación real:
 
 - `open-vm-tools.service` o `vmtoolsd.service`, según el paquete de Parrot;
-- integración gráfica de `open-vm-tools-desktop` dentro de la sesión X11;
+- integración gráfica de `open-vm-tools-desktop` dentro de la sesión X11; BSPWM inicia `vmware-user-suid-wrapper` condicionalmente y una sola vez;
 - `vmware-vmblock-fuse.service`, si existe y se requieren funciones de clipboard/drag-and-drop;
 - montaje de carpetas compartidas con `vmhgfs-fuse`, después de configurarlas en VMware.
 
 Esta iteración no ejecuta `systemctl enable`, no cambia políticas de tiempo y no monta carpetas.
+
+Algunos paquetes pueden habilitar unidades desde sus scripts de postinstalación. Se excluye Suricata del flujo automático porque su paquete habilita `suricata.service`; deberá incorporarse manualmente cuando se defina su política operativa.
+
+### `security-lab`
+
+Instala Node.js/npm y Python/pipx para agentes y herramientas CLI, utilidades de diagnóstico de red y un conjunto explícito de herramientas de enumeración para HTB, TryHackMe y laboratorios autorizados. El prefijo global de npm se mantiene dentro del home del usuario para evitar `sudo npm install -g`. Codex CLI, Claude Code y otras herramientas autenticadas no se instalan automáticamente.
 
 ## Modelo de errores
 
@@ -78,7 +84,9 @@ El backup protege dotfiles, no constituye rollback de paquetes APT. La restaurac
 
 BSPWM crea diez escritorios y distribuye seis/cuatro entre los dos primeros monitores; en un monitor usa los diez. Monitores adicionales siguen siendo utilizables y quedan pendientes de una política configurable en VM. La composición usa XRender, sin blur ni animaciones.
 
-Polybar incluye escritorios, título, CPU, memoria, red, volumen y reloj. Los scripts `vpn-status.sh` y `target-status.sh` siempre producen salida válida aunque no exista interfaz VPN o archivo de objetivo. Quedan preparados módulos futuros para VMware Tools, batería e IP local.
+Polybar incluye escritorios, CPU, memoria, red, VPN, objetivo, reloj y una tarjeta de energía. Esta última abre `power-menu.sh` mediante Rofi: permite bloquear inmediatamente con `i3lock` y exige confirmación antes de cerrar sesión, reiniciar o apagar; el instalador nunca invoca esas acciones. Los scripts `vpn-status.sh` y `target-status.sh` siempre producen salida válida aunque no exista interfaz VPN o archivo de objetivo. Picom usa XRender con `use-damage = false` para evitar tarjetas que desaparecen por fallos de repintado de ventanas transparentes en VMware. Quedan preparados módulos futuros para VMware Tools, batería e IP local.
+
+`wallpaper-cycle.sh` administra la colección bajo `~/.local/share/backgrounds/parrot-security-lab/`, recorre subcarpetas, conserva la selección en el estado XDG y rota cada 900 segundos. El daemon se inicia una sola vez con BSPWM. La primera tarjeta de Polybar avanza con clic izquierdo y muestra un selector Rofi con clic derecho. El instalador agrega el wallpaper inicial y una selección local de 9 fondos HackerOne 1920x1080; no depende de red ni elimina imágenes incorporadas por el usuario. La colección externa está fijada al commit `beaf5596a6bfcd7eec42d8866c153c748e6734b5` y conserva licencia y atribución CC BY-NC-SA 4.0.
 
 ## Decisiones de seguridad
 

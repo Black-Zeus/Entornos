@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Estas constantes se consumen desde install.sh al cargar esta biblioteca.
+# shellcheck disable=SC2034
+
 readonly EXIT_OK=0
 readonly EXIT_USAGE=2
 readonly EXIT_UNSUPPORTED=3

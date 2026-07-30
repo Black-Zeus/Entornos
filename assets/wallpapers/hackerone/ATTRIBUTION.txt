@@ -1,0 +1,9 @@
+HackerOne Wallpapers
+
+Source: https://github.com/Hacker0x01/wallpapers
+Commit: beaf5596a6bfcd7eec42d8866c153c748e6734b5
+Resolution included: 1920x1080
+License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+License URL: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+The original LICENSE and README are included in this directory.

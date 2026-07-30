@@ -42,7 +42,7 @@ detect_real_user() {
 }
 
 detect_parrot() {
-  local ID='' ID_LIKE='' PRETTY_NAME=''
+  local ID='' PRETTY_NAME=''
   if [[ ! -r "$OS_RELEASE_FILE" ]]; then
     log_error "No se puede leer $OS_RELEASE_FILE."
     return "$EXIT_UNSUPPORTED"

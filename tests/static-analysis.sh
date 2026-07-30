@@ -34,7 +34,7 @@ if command -v shellcheck >/dev/null 2>&1; then
   mapfile -d '' shell_files < <(find "$ROOT_DIR" \
     -path "$ROOT_DIR/.git" -prune -o \
     -path "$ROOT_DIR/legacy" -prune -o \
-    -type f -name '*.sh' -print0)
+    -type f \( -name '*.sh' -o -path "$ROOT_DIR/scripts/*" \) -print0)
   if ! shellcheck -x "${shell_files[@]}"; then
     status=1
   fi

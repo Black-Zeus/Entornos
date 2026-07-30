@@ -1,0 +1,12 @@
+# Reconocimiento y enumeración.
+required nmap
+required arp-scan
+required dnsrecon
+required whois
+required bind9-dnsutils
+required whatweb
+optional netdiscover
+optional dnsenum
+optional masscan
+optional amass
+optional recon-ng

@@ -1,0 +1,12 @@
+# Active Directory y entornos Windows.
+required smbmap
+required ldap-utils
+required python3-impacket
+required impacket-scripts
+required cifs-utils
+optional krb5-user
+optional bloodhound
+optional netexec
+optional responder
+optional evil-winrm
+optional certipy-ad

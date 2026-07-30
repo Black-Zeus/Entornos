@@ -1,11 +1,14 @@
 # Pendiente de validar con apt-cache show dentro de una VM Parrot actualizada.
 required bspwm
+required curl
+required unzip
 required sxhkd
 required polybar
 required rofi
 required picom
 required kitty
 required dunst
+required i3lock
 required feh
 optional nitrogen
 required thunar

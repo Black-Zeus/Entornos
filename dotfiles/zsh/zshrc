@@ -1,12 +1,86 @@
+# Inicio instantáneo de Powerlevel10k; debe permanecer al comienzo del archivo.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Configuración mínima; el instalador no cambia la shell del usuario.
+export PATH="$HOME/.local/bin:$PATH"
+export NPM_CONFIG_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/npm"
+export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
-setopt append_history hist_ignore_dups share_history
+setopt append_history hist_ignore_dups hist_reduce_blanks share_history
 autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
 bindkey -e
-PROMPT='%F{green}%n@%m%f:%F{blue}%~%f %# '
+if [[ -r "$HOME/.local/share/powerlevel10k/1.20.0/powerlevel10k.zsh-theme" ]]; then
+  source "$HOME/.local/share/powerlevel10k/1.20.0/powerlevel10k.zsh-theme"
+  [[ -r "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
+else
+  PROMPT='%F{green}%n@%m%f:%F{blue}%~%f %# '
+fi
 
-alias ll='ls -alF'
-alias la='ls -A'
+# En Debian/Parrot, el paquete bat instala normalmente el binario como batcat.
+if (( $+commands[batcat] )); then
+  alias cat='batcat --paging=never'
+elif (( $+commands[bat] )); then
+  alias cat='bat --paging=never'
+fi
+alias ncat='/usr/bin/cat'
+
+if (( $+commands[fdfind] )); then
+  alias fd='fdfind'
+fi
+
+if (( $+commands[lsd] )); then
+  alias ls='lsd --group-dirs=first'
+  alias ll='lsd -al --group-dirs=first'
+  alias la='lsd -A --group-dirs=first'
+else
+  alias ll='ls -alF'
+  alias la='ls -A'
+fi
 alias grep='grep --color=auto'
+
+# Búsqueda interactiva de historial (Ctrl-R) y completado con fzf.
+for fzf_script in \
+  /usr/share/doc/fzf/examples/key-bindings.zsh \
+  /usr/share/doc/fzf/examples/completion.zsh; do
+  [[ -r "$fzf_script" ]] && source "$fzf_script"
+done
+unset fzf_script
+
+# Navegación inteligente: use `z directorio` y `zi`.
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
+
+# Variables por proyecto; cada .envrc requiere aprobación con `direnv allow`.
+if (( $+commands[direnv] )); then
+  eval "$(direnv hook zsh)"
+fi
+
+# Doble Esc antepone o retira sudo en la línea de comandos actual.
+sudo-command-line() {
+  if [[ -z "$BUFFER" ]]; then
+    zle up-history
+  fi
+  if [[ "$BUFFER" == sudo\ * ]]; then
+    BUFFER="${BUFFER#sudo }"
+    (( CURSOR >= 5 )) && CURSOR=$((CURSOR - 5))
+  else
+    BUFFER="sudo $BUFFER"
+    CURSOR=$((CURSOR + 5))
+  fi
+}
+zle -N sudo-command-line
+bindkey '\e\e' sudo-command-line
+
+[[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Debe cargarse al final para colorear widgets y aliases ya definidos.
+[[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

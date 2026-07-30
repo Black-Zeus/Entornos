@@ -5,8 +5,9 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 required=(
   install.sh AGENTS.md README.md
   docs/audit-report.md docs/architecture.md docs/testing.md
-  lib/common.sh lib/logging.sh lib/detect-system.sh lib/packages-apt.sh
-  lib/deploy-dotfiles.sh lib/backup.sh
+  lib/common.sh lib/logging.sh lib/detect-system.sh lib/packages-apt.sh lib/repositories-apt.sh
+  lib/firefox-extensions.sh assets/firefox/wappalyzer-policy.json
+  lib/deploy-dotfiles.sh lib/backup.sh lib/fonts.sh lib/powerlevel10k.sh
   packages/base.txt packages/desktop.txt packages/vmware.txt packages/security-lab.txt
 )
 
@@ -16,7 +17,7 @@ done
 
 for executable in install.sh tests/syntax-check.sh tests/static-analysis.sh tests/smoke-test.sh \
   dotfiles/bspwm/bspwmrc dotfiles/polybar/launch.sh scripts/vpn-status.sh \
-  scripts/target-status.sh scripts/screenshot.sh scripts/lab-update.sh; do
+  scripts/interface-status.sh scripts/memory-status.sh scripts/target-status.sh scripts/target scripts/screenshot.sh scripts/lab-update.sh scripts/power-menu.sh scripts/wallpaper-cycle.sh; do
   [[ -x "$ROOT_DIR/$executable" ]] || { printf 'No es ejecutable: %s\n' "$executable" >&2; exit 1; }
 done
 
@@ -32,10 +33,11 @@ PARROT_EUID_OVERRIDE=1000 \
 PARROT_USER_OVERRIDE=tester \
 PARROT_HOME_OVERRIDE="$fixture_dir/home/tester" \
 PARROT_VIRT_OVERRIDE=vmware \
-  "$ROOT_DIR/install.sh" --components base,desktop,vmware --dry-run > "$fixture_dir/dry-run.log"
+  "$ROOT_DIR/install.sh" --components base,desktop,vmware,security-lab --dry-run > "$fixture_dir/dry-run.log"
 
 grep -q 'MODO DRY-RUN' "$fixture_dir/dry-run.log"
 grep -q 'Resumen final' "$fixture_dir/dry-run.log"
+grep -q 'Wappalyzer firmado desde Mozilla Add-ons' "$fixture_dir/dry-run.log"
 [[ ! -e "$fixture_dir/home/tester/.config/bspwm/bspwmrc" ]] || {
   printf 'El dry-run modificó el home simulado.\n' >&2
   exit 1

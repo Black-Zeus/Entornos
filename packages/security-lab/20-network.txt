@@ -1,0 +1,11 @@
+# Análisis y captura de red.
+required tcpdump
+required tshark
+required netcat-openbsd
+required ncat
+required socat
+required ngrep
+optional wireshark
+optional bettercap
+optional ettercap-graphical
+optional python3-scapy

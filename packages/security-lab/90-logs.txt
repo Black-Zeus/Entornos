@@ -1,0 +1,8 @@
+# Análisis de logs.
+optional lnav
+optional logwatch
+optional goaccess
+optional auditd
+optional yq
+optional miller
+optional multitail

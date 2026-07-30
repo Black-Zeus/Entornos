@@ -14,6 +14,7 @@ init_logging() {
   fi
 
   mkdir -p -- "$log_dir"
+  chmod 700 "$log_dir"
   : > "$LOG_FILE"
   chmod 600 "$LOG_FILE"
   if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then

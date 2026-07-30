@@ -2,9 +2,9 @@
     monitor = 0
     follow = keyboard
     width = (300, 420)
-    height = 300
+    height = (0, 300)
     origin = top-right
-    offset = 12x36
+    offset = (12, 36)
     notification_limit = 5
     font = Monospace 10
     frame_width = 2

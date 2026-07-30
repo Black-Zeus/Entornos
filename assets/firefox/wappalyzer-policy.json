@@ -1,0 +1,10 @@
+{
+  "policies": {
+    "ExtensionSettings": {
+      "wappalyzer@crunchlabz.com": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/file/4887810/wappalyzer-6.12.4.xpi"
+      }
+    }
+  }
+}

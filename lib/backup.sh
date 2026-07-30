@@ -9,12 +9,6 @@ init_backup() {
   BACKUP_ROOT="$state_dir/backups/$timestamp"
   if (( DRY_RUN )); then
     printf '[dry-run] Backup previsto: %s\n' "$BACKUP_ROOT"
-  else
-    mkdir -p -- "$BACKUP_ROOT"
-    chmod 700 "$BACKUP_ROOT"
-    if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
-      chown "$REAL_USER:" "$BACKUP_ROOT"
-    fi
   fi
 }
 
@@ -31,7 +25,11 @@ backup_path() {
     return 0
   fi
 
-  mkdir -p -- "$(dirname -- "$backup_target")"
+  mkdir -p -- "$BACKUP_ROOT" "$(dirname -- "$backup_target")"
+  chmod 700 "$BACKUP_ROOT"
+  if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
+    chown "$REAL_USER:" "$BACKUP_ROOT"
+  fi
   cp -a -- "$target" "$backup_target"
   if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
     chown -R "$REAL_USER:" "$backup_target"

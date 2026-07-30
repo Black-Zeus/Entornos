@@ -1,4 +1,15 @@
-# Borrador intencional. No forma parte de los componentes instalables todavía.
-# Las herramientas de seguridad se agregarán individualmente después de validar
-# finalidad, procedencia, licencia y disponibilidad en Parrot. No se instalarán
-# metapaquetes ofensivos ni colecciones masivas desde este archivo.
+# Utilidades comunes del componente security-lab.
+# Formato: required|optional nombre-paquete
+required nodejs
+required npm
+required python3
+required python3-pip
+required python3-venv
+required pipx
+required build-essential
+required jq
+required ripgrep
+required fd-find
+required shellcheck
+optional direnv
+optional python3-pandas

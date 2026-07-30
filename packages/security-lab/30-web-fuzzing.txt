@@ -1,0 +1,14 @@
+# Auditoría web, API y fuzzing.
+required curl
+required httpie
+required gobuster
+required ffuf
+required feroxbuster
+required nikto
+required seclists
+required burpsuite
+optional zaproxy
+optional sqlmap
+optional commix
+optional wpscan
+optional wfuzz
