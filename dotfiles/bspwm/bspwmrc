@@ -2,7 +2,9 @@
 # Sesión BSPWM ligera para una VM de laboratorio.
 set -u
 
-command -v sxhkd >/dev/null 2>&1 && pgrep -x sxhkd >/dev/null 2>&1 || sxhkd &
+if command -v sxhkd >/dev/null 2>&1 && ! pgrep -x sxhkd >/dev/null 2>&1; then
+  sxhkd &
+fi
 
 # Distribuya diez escritorios entre los monitores conectados. Cada monitor
 # recibe al menos uno y el monitor primario conserva los restantes.
