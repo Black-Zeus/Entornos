@@ -30,6 +30,13 @@ elif (( $+commands[bat] )); then
 fi
 alias ncat='/usr/bin/cat'
 
+# Kitty incluye un visor de imágenes llamado icat. Sleuth Kit instala otro
+# binario con el mismo nombre; se conserva accesible como fsicat.
+if (( $+commands[kitten] )); then
+  alias icat='kitten icat'
+fi
+[[ -x /usr/bin/icat ]] && alias fsicat='/usr/bin/icat'
+
 if (( $+commands[fdfind] )); then
   alias fd='fdfind'
 fi

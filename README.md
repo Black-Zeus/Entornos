@@ -42,6 +42,9 @@ El instalador rechaza sistemas no Parrot y sesiones root directas. No reinicia, 
 Polybar incluye un menú de energía operado con Rofi para bloquear con `i3lock`, cerrar la sesión BSPWM, reiniciar o apagar. Las acciones de cierre y energía requieren confirmación y nunca se ejecutan durante la instalación.
 
 Los fondos viven en `~/.local/share/backgrounds/parrot-security-lab/` y rotan cada 15 minutos. En la primera tarjeta de Polybar, el clic izquierdo avanza al siguiente y el derecho abre un selector Rofi. Las imágenes nuevas pueden copiarse a esa carpeta sin modificar el instalador. El repositorio respalda localmente una selección de 9 fondos 1920x1080 de [HackerOne Wallpapers](https://github.com/Hacker0x01/wallpapers), fijados al commit `beaf5596a6bfcd7eec42d8866c153c748e6734b5` y distribuidos bajo CC BY-NC-SA 4.0 con licencia y atribución incluidas.
+
+En Zsh, `icat` invoca el visor gráfico `kitten icat`; la herramienta forense homónima de Sleuth Kit se conserva como `fsicat`.
+
 - `security-lab`: Node.js/npm, Python/pipx, utilidades de red y herramientas de enumeración para laboratorios autorizados.
 
 Las listas viven en `packages/`. `security-lab.txt` mantiene una selección explícita y auditable; no instala metapaquetes ni colecciones ofensivas masivas. Los CLI que requieren autenticación se instalan posteriormente como usuario.
