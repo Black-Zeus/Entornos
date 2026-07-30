@@ -55,6 +55,9 @@ deploy_desktop_dotfiles() {
 deploy_base_dotfiles() {
   deploy_file "$PROJECT_ROOT/dotfiles/zsh/zshrc" "$REAL_HOME/.zshrc" 0644
   deploy_file "$PROJECT_ROOT/dotfiles/tmux/tmux.conf" "$REAL_HOME/.tmux.conf" 0644
+}
+
+deploy_lab_scripts() {
   local script
   for script in vpn-status.sh target-status.sh screenshot.sh lab-update.sh; do
     deploy_file "$PROJECT_ROOT/scripts/$script" "$REAL_HOME/.local/bin/$script" 0755

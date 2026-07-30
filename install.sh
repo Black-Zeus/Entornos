@@ -113,6 +113,9 @@ verify_dependencies() {
 deploy_selected_dotfiles() {
   component_selected base && deploy_base_dotfiles
   component_selected desktop && deploy_desktop_dotfiles
+  if component_selected base || component_selected desktop; then
+    deploy_lab_scripts
+  fi
 }
 
 print_summary() {
@@ -133,19 +136,25 @@ print_summary() {
     printf '  Backups: %s\n' "$BACKUP_ROOT"
   fi
   printf '\nNo se cambió la shell ni se habilitaron servicios. No se requiere reinicio automático.\n'
-  component_selected vmware && printf 'Revise docs/architecture.md antes de habilitar manualmente servicios VMware.\n'
+  if component_selected vmware; then
+    printf 'Revise docs/architecture.md antes de habilitar manualmente servicios VMware.\n'
+  fi
 }
 
 on_error() {
-  local status=$?
-  local line="$1"
+  local status="$1"
+  local line="$2"
+  case "$status" in
+    "$EXIT_USAGE"|"$EXIT_UNSUPPORTED"|"$EXIT_DEPENDENCY"|"$EXIT_OPERATION") ;;
+    *) status="$EXIT_OPERATION" ;;
+  esac
   log_error "Fallo crítico en la línea $line (código $status)."
   exit "$status"
 }
 
 main() {
   parse_args "$@"
-  trap 'on_error "$LINENO"' ERR
+  trap 'on_error "$?" "$LINENO"' ERR
 
   if [[ "${PARROT_INSTALLER_TESTING:-0}" == 1 && "$DRY_RUN" != 1 ]]; then
     log_error 'El modo de prueba interno solo permite --dry-run.'

@@ -41,6 +41,31 @@ grep -q 'Resumen final' "$fixture_dir/dry-run.log"
   exit 1
 }
 
+PARROT_INSTALLER_TESTING=1 \
+PARROT_OS_RELEASE_FILE="$fixture_dir/os-release" \
+PARROT_EUID_OVERRIDE=1000 \
+PARROT_USER_OVERRIDE=tester \
+PARROT_HOME_OVERRIDE="$fixture_dir/home/tester" \
+PARROT_VIRT_OVERRIDE=vmware \
+  "$ROOT_DIR/install.sh" --components desktop --dry-run > "$fixture_dir/desktop-only.log"
+grep -q '.local/bin/vpn-status.sh' "$fixture_dir/desktop-only.log"
+
+printf 'ID=debian\nPRETTY_NAME="Debian de prueba"\n' > "$fixture_dir/not-parrot"
+set +e
+PARROT_INSTALLER_TESTING=1 \
+PARROT_OS_RELEASE_FILE="$fixture_dir/not-parrot" \
+PARROT_EUID_OVERRIDE=1000 \
+PARROT_USER_OVERRIDE=tester \
+PARROT_HOME_OVERRIDE="$fixture_dir/home/tester" \
+  "$ROOT_DIR/install.sh" --dry-run > "$fixture_dir/rejected.log" 2>&1
+rejected_status=$?
+set -e
+[[ "$rejected_status" == 3 ]] || {
+  printf 'La detección no rechazó Debian con código 3 (obtenido: %s).\n' "$rejected_status" >&2
+  exit 1
+}
+grep -q 'Sistema no soportado' "$fixture_dir/rejected.log"
+
 # Prueba aislada de backup y despliegue real; solo escribe dentro del temporal.
 PARROT_INSTALLER_TESTING=1 bash -c '
   set -Eeuo pipefail
