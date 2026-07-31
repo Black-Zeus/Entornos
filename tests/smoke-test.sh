@@ -9,6 +9,7 @@ required=(
   lib/firefox-extensions.sh assets/firefox/wappalyzer-policy.json
   lib/deploy-dotfiles.sh lib/backup.sh lib/fonts.sh lib/powerlevel10k.sh
   packages/base.txt packages/desktop.txt packages/vmware.txt packages/security-lab.txt
+  VPN/.gitignore VPN/README.md scripts/vpn-manager.sh
 )
 
 for path in "${required[@]}"; do
@@ -16,7 +17,7 @@ for path in "${required[@]}"; do
 done
 
 for executable in install.sh tests/syntax-check.sh tests/static-analysis.sh tests/smoke-test.sh \
-  dotfiles/bspwm/bspwmrc dotfiles/polybar/launch.sh scripts/vpn-status.sh \
+  dotfiles/bspwm/bspwmrc dotfiles/polybar/launch.sh scripts/vpn-status.sh scripts/vpn-manager.sh \
   scripts/interface-status.sh scripts/memory-status.sh scripts/target-status.sh scripts/target scripts/screenshot.sh scripts/lab-update.sh scripts/power-menu.sh scripts/wallpaper-cycle.sh; do
   [[ -x "$ROOT_DIR/$executable" ]] || { printf 'No es ejecutable: %s\n' "$executable" >&2; exit 1; }
 done
@@ -51,6 +52,11 @@ PARROT_HOME_OVERRIDE="$fixture_dir/home/tester" \
 PARROT_VIRT_OVERRIDE=vmware \
   "$ROOT_DIR/install.sh" --components desktop --dry-run > "$fixture_dir/desktop-only.log"
 grep -q '.local/bin/vpn-status.sh' "$fixture_dir/desktop-only.log"
+grep -q '.local/bin/vpn-manager.sh' "$fixture_dir/desktop-only.log"
+grep -q '^required openvpn$' "$ROOT_DIR/packages/base.txt"
+grep -q '^required libnotify-bin$' "$ROOT_DIR/packages/base.txt"
+grep -q '^required polkit-kde-agent-1$' "$ROOT_DIR/packages/desktop.txt"
+grep -q '^required ksshaskpass$' "$ROOT_DIR/packages/desktop.txt"
 
 printf 'ID=debian\nPRETTY_NAME="Debian de prueba"\n' > "$fixture_dir/not-parrot"
 set +e

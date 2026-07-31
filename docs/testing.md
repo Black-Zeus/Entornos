@@ -54,7 +54,10 @@ En un sistema que no sea Parrot, el segundo comando debe rechazar la ejecución.
 - Confirmar los 9 fondos HackerOne 1920x1080 seleccionados, `LICENSE`, `README.upstream.md` y `ATTRIBUTION.txt` tanto en `assets/` como después del despliegue.
 - Probar el bloqueo con `i3lock` y confirmar por separado cierre de sesión, reinicio y apagado desde el menú Rofi.
 - Verificar interfaces Ethernet/Wi-Fi reales para el módulo de red.
-- Probar `tun*`, `tap*` y `wg*` para estado VPN.
+- Guardar un perfil HTB en `Entornos/VPN`, confirmar que Git lo ignora y probar
+  selección, autorización KSSHAskPass, conexión, desconexión y apertura del log.
+- Probar `tun*`, `tap*` y `wg*` para estado VPN y provocar de forma controlada
+  un perfil inválido para verificar `VPN ERR` y la notificación de Dunst.
 - Revisar fuentes disponibles; la configuración usa `monospace` para no depender de Nerd Fonts.
 - Ejecutar ShellCheck en VM si no está disponible en el host de revisión.
 - Ejecutar una segunda instalación y confirmar que no se crean backups ni cambios innecesarios.

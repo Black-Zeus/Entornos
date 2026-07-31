@@ -7,6 +7,9 @@ deploy_file() {
 
   [[ -f "$source_file" ]] || { log_error "Fuente inexistente: $source_file"; return "$EXIT_OPERATION"; }
   if [[ -f "$target_file" ]] && cmp -s -- "$source_file" "$target_file"; then
+    if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
+      chown "$REAL_USER:" "$(dirname -- "$target_file")" "$target_file"
+    fi
     log_info "Sin cambios: $target_file"
     return 0
   fi
@@ -23,7 +26,7 @@ deploy_file() {
   mkdir -p -- "$(dirname -- "$target_file")"
   install -m "$mode" -- "$source_file" "$target_file"
   if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
-    chown "$REAL_USER:" "$target_file"
+    chown "$REAL_USER:" "$(dirname -- "$target_file")" "$target_file"
   fi
   log_info "Instalado: $target_file"
 }
@@ -67,7 +70,7 @@ deploy_base_dotfiles() {
 
 deploy_lab_scripts() {
   local script
-  for script in vpn-status.sh interface-status.sh memory-status.sh target-status.sh target screenshot.sh lab-update.sh power-menu.sh wallpaper-cycle.sh; do
+  for script in vpn-status.sh vpn-manager.sh interface-status.sh memory-status.sh target-status.sh target screenshot.sh lab-update.sh power-menu.sh wallpaper-cycle.sh; do
     deploy_file "$PROJECT_ROOT/scripts/$script" "$REAL_HOME/.local/bin/$script" 0755
   done
 }

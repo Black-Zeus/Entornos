@@ -44,6 +44,13 @@ start_once() {
 start_once picom picom --config "$HOME/.config/picom/picom.conf"
 start_once dunst dunst --config "$HOME/.config/dunst/dunstrc"
 
+# Mantiene disponible un agente gráfico para acciones del escritorio que usen
+# Polkit. El gestor OpenVPN utiliza KSSHAskPass de forma independiente.
+polkit_agent='/usr/lib/x86_64-linux-gnu/libexec/polkit-kde-authentication-agent-1'
+if [[ -x "$polkit_agent" ]] && ! pgrep -u "$UID" -f "$polkit_agent" >/dev/null 2>&1; then
+  "$polkit_agent" &
+fi
+
 # open-vm-tools necesita un proceso dentro de la sesión X11 para ofrecer
 # clipboard, drag-and-drop y ajuste gráfico al host VMware.
 if [[ -x /usr/bin/vmware-user-suid-wrapper ]] && \

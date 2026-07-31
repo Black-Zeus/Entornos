@@ -35,11 +35,17 @@ El instalador rechaza sistemas no Parrot y sesiones root directas. No reinicia, 
 
 ## Componentes
 
-- `base`: Google Chrome estable, Wappalyzer para Firefox, Git, utilidades CLI, `bat`, `lsd`, tmux y Zsh con Powerlevel10k, autosuggestions, syntax highlighting, fzf, zoxide, direnv y doble `Esc` para alternar `sudo`.
+- `base`: Google Chrome estable, Wappalyzer para Firefox, OpenVPN, Git, utilidades CLI, `bat`, `lsd`, tmux y Zsh con Powerlevel10k, autosuggestions, syntax highlighting, fzf, zoxide, direnv y doble `Esc` para alternar `sudo`.
 - `desktop`: BSPWM, SXHKD, Polybar, Rofi, Picom, Kitty, Dunst y utilidades gráficas.
 - `vmware`: open-vm-tools e integración de escritorio; servicios y carpetas compartidas quedan como pasos manuales documentados.
 
 Polybar incluye un menú de energía operado con Rofi para bloquear con `i3lock`, cerrar la sesión BSPWM, reiniciar o apagar. Las acciones de cierre y energía requieren confirmación y nunca se ejecutan durante la instalación.
+
+Los perfiles de Hack The Box se guardan localmente como `Entornos/VPN/*.ovpn` y
+no se versionan. El clic izquierdo sobre la tarjeta VPN permite seleccionar un
+perfil o desconectar la sesión administrada; `sudo -A` y KSSHAskPass solicitan
+autorización gráfica para OpenVPN sin requerir una TTY. La tarjeta muestra `VPN ERR` cuando el arranque falla y el clic derecho
+abre el log detallado.
 
 Los fondos viven en `~/.local/share/backgrounds/parrot-security-lab/` y rotan cada 15 minutos. En la primera tarjeta de Polybar, el clic izquierdo avanza al siguiente y el derecho abre un selector Rofi. Las imágenes nuevas pueden copiarse a esa carpeta sin modificar el instalador. El repositorio respalda localmente una selección de 9 fondos 1920x1080 de [HackerOne Wallpapers](https://github.com/Hacker0x01/wallpapers), fijados al commit `beaf5596a6bfcd7eec42d8866c153c748e6734b5` y distribuidos bajo CC BY-NC-SA 4.0 con licencia y atribución incluidas.
 

@@ -41,11 +41,11 @@ El modo interno `PARROT_INSTALLER_TESTING=1` solo funciona junto con `--dry-run`
 
 ### `base`
 
-Instala Google Chrome estable, utilidades generales, Zsh y tmux. Chrome se obtiene exclusivamente mediante el repositorio APT oficial de Google: la clave se descarga por TLS, se compara con la huella oficial `EB4C 1BFD 4F04 2F6D DDCC EC91 7721 F63B D38B 4796` y se limita al repositorio mediante `signed-by`. También combina una política de Firefox para instalar Wappalyzer firmado desde Mozilla Add-ons en modo `normal_installed`; conserva otras políticas, respalda el archivo previo y permite deshabilitar la extensión. Zsh carga Powerlevel10k, autosuggestions, syntax highlighting, fzf, zoxide y direnv; doble `Esc` alterna `sudo` sin habilitar correcciones automáticas agresivas. Despliega `.zshrc`, `.tmux.conf` y scripts operativos en `~/.local/bin`. No cambia la shell por defecto.
+Instala Google Chrome estable, OpenVPN, utilidades generales, Zsh y tmux. Chrome se obtiene exclusivamente mediante el repositorio APT oficial de Google: la clave se descarga por TLS, se compara con la huella oficial `EB4C 1BFD 4F04 2F6D DDCC EC91 7721 F63B D38B 4796` y se limita al repositorio mediante `signed-by`. También combina una política de Firefox para instalar Wappalyzer firmado desde Mozilla Add-ons en modo `normal_installed`; conserva otras políticas, respalda el archivo previo y permite deshabilitar la extensión. Zsh carga Powerlevel10k, autosuggestions, syntax highlighting, fzf, zoxide y direnv; doble `Esc` alterna `sudo` sin habilitar correcciones automáticas agresivas. Despliega `.zshrc`, `.tmux.conf` y scripts operativos en `~/.local/bin`. No cambia la shell por defecto.
 
 ### `desktop`
 
-Instala BSPWM, SXHKD, Polybar, Rofi, Picom, Kitty, Dunst y utilidades gráficas. Despliega configuración bajo `~/.config` y un wallpaper local. No cambia display manager ni crea una sesión en `/usr/share/xsessions` durante esta fase.
+Instala BSPWM, SXHKD, Polybar, Rofi, Picom, Kitty, Dunst, KSSHAskPass, el agente KDE de Polkit y utilidades gráficas. BSPWM inicia el agente Polkit solo si no existe otro proceso equivalente. KSSHAskPass permite que herramientas lanzadas desde Polybar soliciten autorización mediante `sudo -A` sin una TTY ni reglas sudoers. Despliega configuración bajo `~/.config` y un wallpaper local. No cambia display manager ni crea una sesión en `/usr/share/xsessions` durante esta fase.
 
 ### `vmware`
 
@@ -76,7 +76,7 @@ Códigos públicos: `0` éxito, `2` uso inválido, `3` plataforma/usuario no sop
 
 ## Idempotencia y backups
 
-Las listas APT usan una sola resolución por ejecución y APT gestiona paquetes ya instalados. `deploy_file` compara fuente y destino; si son idénticos no escribe. Si difieren, copia primero el destino a `~/.local/state/parrot-security-lab/backups/<timestamp>/` preservando su ruta absoluta relativa. Los logs se guardan con permisos `0600`.
+Las listas APT usan una sola resolución por ejecución y APT gestiona paquetes ya instalados. `deploy_file` compara fuente y destino; si son idénticos no escribe. Si difieren, copia primero el destino a `~/.local/state/parrot-security-lab/backups/<timestamp>/` preservando su ruta absoluta relativa. Los logs se guardan con permisos `0600`. Cuando la ejecución usa `sudo`, los directorios de estado y los directorios padre de los archivos desplegados se asignan al usuario real para que las herramientas de escritorio puedan escribir en ellos.
 
 El backup protege dotfiles, no constituye rollback de paquetes APT. La restauración es manual e intencional.
 
@@ -85,6 +85,18 @@ El backup protege dotfiles, no constituye rollback de paquetes APT. La restaurac
 BSPWM crea diez escritorios y distribuye seis/cuatro entre los dos primeros monitores; en un monitor usa los diez. Monitores adicionales siguen siendo utilizables y quedan pendientes de una política configurable en VM. La composición usa XRender, sin blur ni animaciones.
 
 Polybar incluye escritorios, CPU, memoria, red, VPN, objetivo, reloj y una tarjeta de energía. Esta última abre `power-menu.sh` mediante Rofi: permite bloquear inmediatamente con `i3lock` y exige confirmación antes de cerrar sesión, reiniciar o apagar; el instalador nunca invoca esas acciones. Los scripts `vpn-status.sh` y `target-status.sh` siempre producen salida válida aunque no exista interfaz VPN o archivo de objetivo. Picom usa XRender con `use-damage = false` para evitar tarjetas que desaparecen por fallos de repintado de ventanas transparentes en VMware. Quedan preparados módulos futuros para VMware Tools, batería e IP local.
+
+`interface-status.sh` excluye explícitamente interfaces `tun*`, `tap*` y `wg*`
+del carrusel de direcciones locales. Las direcciones de túnel se muestran solo
+en la tarjeta VPN para evitar información duplicada.
+
+`vpn-manager.sh` busca exclusivamente perfiles regulares `.ovpn` en
+`~/Entornos/VPN`, carpeta ignorada por Git. Rofi selecciona el perfil y
+`sudo -A` usa KSSHAskPass para iniciar o detener OpenVPN; no se crean reglas
+sudoers ni permisos permanentes. El gestor conserva PID, estado y log bajo
+`~/.local/state/parrot-security-lab/vpn`, solo termina el PID si sigue siendo un
+proceso `openvpn`, notifica el resultado con Dunst y expone fallos como `VPN ERR`.
+El clic derecho de la tarjeta abre las últimas líneas del log en Kitty.
 
 `wallpaper-cycle.sh` administra la colección bajo `~/.local/share/backgrounds/parrot-security-lab/`, recorre subcarpetas, conserva la selección en el estado XDG y rota cada 900 segundos. El daemon se inicia una sola vez con BSPWM. La primera tarjeta de Polybar avanza con clic izquierdo y muestra un selector Rofi con clic derecho. El instalador agrega el wallpaper inicial y una selección local de 9 fondos HackerOne 1920x1080; no depende de red ni elimina imágenes incorporadas por el usuario. La colección externa está fijada al commit `beaf5596a6bfcd7eec42d8866c153c748e6734b5` y conserva licencia y atribución CC BY-NC-SA 4.0.
 

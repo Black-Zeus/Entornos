@@ -12,13 +12,15 @@ default_interface="$(ip -4 route show default 2>/dev/null | awk '{print $5; exit
 add_interface() {
   local interface="$1"
   [[ -n "$interface" && -z "${seen[$interface]:-}" ]] || return 0
+  # Las interfaces de túnel pertenecen exclusivamente a la tarjeta VPN.
+  [[ ! "$interface" =~ ^(tun|tap|wg)[[:alnum:]_.-]*$ ]] || return 0
   if ip -o -4 address show dev "$interface" scope global 2>/dev/null | grep -q .; then
     interfaces+=("$interface")
     seen[$interface]=1
   fi
 }
 
-# La IP local aparece primero. Los clics avanzan luego por VPN y otras redes.
+# La IP local aparece primero; luego se alternan otras redes no VPN.
 add_interface "$default_interface"
 while read -r interface; do
   add_interface "$interface"

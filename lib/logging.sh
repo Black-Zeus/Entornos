@@ -18,7 +18,7 @@ init_logging() {
   : > "$LOG_FILE"
   chmod 600 "$LOG_FILE"
   if [[ "$EUID" == 0 && -n "${REAL_USER:-}" ]]; then
-    chown "$REAL_USER:" "$log_dir" "$LOG_FILE"
+    chown "$REAL_USER:" "$(dirname -- "$log_dir")" "$log_dir" "$LOG_FILE"
   fi
 }
 

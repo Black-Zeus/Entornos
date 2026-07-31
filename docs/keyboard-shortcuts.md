@@ -103,6 +103,8 @@ Estos controles usan el ratón, pero forman parte del mapa operativo del escrito
 |---|---|
 | Clic izquierdo en la primera tarjeta | Cambiar al wallpaper siguiente. |
 | Clic derecho en la primera tarjeta | Abrir el selector de wallpapers con Rofi. |
+| Clic izquierdo en la tarjeta VPN | Seleccionar un perfil `.ovpn`; si la sesión está activa, permite desconectarla o ver el log. |
+| Clic derecho en la tarjeta VPN | Abrir el log de OpenVPN en Kitty. |
 | Clic en un escritorio | Cambiar a ese escritorio. |
 | Rueda sobre los escritorios | Recorrer los escritorios. |
 | Clic izquierdo en la tarjeta de energía | Abrir el menú para bloquear, cerrar sesión, reiniciar o apagar. |

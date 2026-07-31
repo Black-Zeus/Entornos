@@ -8,6 +8,8 @@ required rofi
 required picom
 required kitty
 required dunst
+required polkit-kde-agent-1
+required ksshaskpass
 required i3lock
 required feh
 optional nitrogen

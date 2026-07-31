@@ -5,3 +5,7 @@ install.sh text eol=lf
 *.rasi text eol=lf
 *.txt text eol=lf
 *.md text eol=lf
+scripts/* text eol=lf
+dotfiles/bspwm/bspwmrc text eol=lf
+dotfiles/polybar/launch.sh text eol=lf
+dotfiles/zsh/* text eol=lf
