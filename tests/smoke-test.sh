@@ -58,6 +58,21 @@ grep -q '^required libnotify-bin$' "$ROOT_DIR/packages/base.txt"
 grep -q '^required polkit-kde-agent-1$' "$ROOT_DIR/packages/desktop.txt"
 grep -q '^required ksshaskpass$' "$ROOT_DIR/packages/desktop.txt"
 
+update_dry_run="$($ROOT_DIR/scripts/lab-update.sh --dry-run)"
+grep -q '^\[dry-run\] sudo parrot-upgrade$' <<< "$update_dry_run"
+if grep -q 'apt-get upgrade' <<< "$update_dry_run"; then
+  printf 'lab-update.sh todavía anuncia apt-get upgrade.\n' >&2
+  exit 1
+fi
+set +e
+"$ROOT_DIR/scripts/lab-update.sh" >/dev/null 2>&1
+update_without_option_status=$?
+set -e
+[[ "$update_without_option_status" == 2 ]] || {
+  printf 'lab-update.sh sin opción no devolvió código 2.\n' >&2
+  exit 1
+}
+
 printf 'ID=debian\nPRETTY_NAME="Debian de prueba"\n' > "$fixture_dir/not-parrot"
 set +e
 PARROT_INSTALLER_TESTING=1 \

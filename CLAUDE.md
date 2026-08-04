@@ -38,6 +38,10 @@ Manual dry-run testing:
 ./scripts/lab-update.sh --dry-run
 ```
 
+`lab-update.sh --upgrade` es la única ruta del proyecto que actualiza la
+distribución completa y usa `sudo parrot-upgrade` tras confirmación explícita.
+`install.sh` solo refresca metadatos APT e instala los paquetes declarados.
+
 There is no package manager / build step — this is a pure Bash project with flat text data files.
 
 ## Architecture

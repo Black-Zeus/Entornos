@@ -67,6 +67,17 @@ target show
 target clear
 ```
 
+La actualización completa del sistema está separada del instalador:
+
+```bash
+lab-update.sh --check
+lab-update.sh --dry-run
+lab-update.sh --upgrade
+```
+
+Solo `--upgrade` modifica paquetes y requiere confirmación; utiliza el comando
+oficial `parrot-upgrade` y nunca reinicia automáticamente.
+
 ## Validación
 
 ```bash

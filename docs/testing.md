@@ -29,7 +29,11 @@ git diff --check
 ./scripts/openssh-backports-fix.sh --dry-run
 ```
 
-`scripts/openssh-backports-fix.sh` no forma parte de `install.sh` ni de sus componentes; es una utilidad manual independiente, sin relación con OpenVPN (el componente `base` ya instala `openvpn` mediante `packages/base.txt`, un paquete sin dependencias de SSH). En Parrot, `openssh-client` puede quedar instalado desde `*-backports` mientras `openssh-server`/`openssh-sftp-server` siguen en el repositorio estable; `openssh-server` exige la misma versión exacta de `openssh-client`, por lo que `apt install openssh-server` falla por dependencias no satisfechas. El script actualiza el sistema con APT y, si detecta el desajuste, reinstala el trío SSH desde el mismo backports que ya usa `openssh-client`.
+`lab-update.sh --check` consulta actualizaciones usando los índices locales y
+no modifica el sistema. `--upgrade` requiere confirmación explícita y ejecuta
+`sudo parrot-upgrade`; debe probarse solo dentro de una VM con snapshot.
+
+`scripts/openssh-backports-fix.sh` no forma parte de `install.sh` ni de sus componentes; es una utilidad manual independiente, sin relación con OpenVPN (el componente `base` ya instala `openvpn` mediante `packages/base.txt`, un paquete sin dependencias de SSH). En Parrot, `openssh-client` puede quedar instalado desde `*-backports` mientras `openssh-server`/`openssh-sftp-server` siguen en el repositorio estable; `openssh-server` exige la misma versión exacta de `openssh-client`, por lo que `apt install openssh-server` falla por dependencias no satisfechas. El script mantiene su propio flujo APT para reparar ese caso concreto y reinstala el trío SSH desde el mismo backports que ya usa `openssh-client`.
 
 En un sistema que no sea Parrot, el segundo comando debe rechazar la ejecución. El smoke test usa las inyecciones restringidas de prueba para recorrer el flujo sin depender del host.
 
