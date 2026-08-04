@@ -7,19 +7,18 @@ case "${1:-}" in
   --dry-run) dry_run=1 ;;
   --help|-h)
     cat <<'EOF'
-Uso: openvpn-server-install.sh [--dry-run]
+Uso: openssh-backports-fix.sh [--dry-run]
 
 Corrige en Parrot OS el conflicto de versiones entre openssh-client
 (instalado desde *-backports) y openssh-server/openssh-sftp-server
-(instalados desde el repositorio estable) que bloquea
-`apt install openvpn-server` con un error de dependencias no satisfechas.
+(instalados desde el repositorio estable), que hace fallar
+`apt install openssh-server` con un error de dependencias no
+satisfechas: openssh-server exige la misma versión exacta de
+openssh-client.
 
-Este script NO instala openvpn-server. Actualiza el sistema con APT
-(equivalente a lab-update.sh) y, si detecta el conflicto, reinstala el
-trío SSH desde el mismo backports que ya usa openssh-client. Después de
-ejecutarlo, instale manualmente:
-
-  sudo apt install openvpn-server
+Este script no instala paquetes ajenos a SSH. Actualiza el sistema con
+APT (equivalente a lab-update.sh) y, si detecta el desajuste, reinstala
+el trío SSH desde el mismo backports que ya usa openssh-client.
 EOF
     exit 0
     ;;
@@ -68,6 +67,5 @@ else
   sudo apt-get install -- openssh-client openssh-server openssh-sftp-server
 fi
 
-printf '\nListo. No se habilitó ni inició ningún servicio SSH ni VPN.\n'
-printf 'Para completar la instalación de OpenVPN, ejecute manualmente:\n'
-printf '  sudo apt install openvpn-server\n'
+printf '\nListo. openssh-client, openssh-server y openssh-sftp-server quedaron en la misma versión.\n'
+printf 'No se habilitó ni inició ningún servicio.\n'

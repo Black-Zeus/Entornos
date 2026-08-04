@@ -26,17 +26,17 @@ git diff --check
 ./install.sh --help
 ./install.sh --components base,desktop,vmware,security-lab --dry-run
 ./scripts/lab-update.sh --dry-run
-./scripts/openvpn-server-install.sh --dry-run
+./scripts/openssh-backports-fix.sh --dry-run
 ```
 
-`scripts/openvpn-server-install.sh` no forma parte de `install.sh` ni de sus componentes; es una utilidad manual independiente. En Parrot, `openssh-client` puede quedar instalado desde `*-backports` mientras `openssh-server`/`openssh-sftp-server` siguen en el repositorio estable, lo que hace que `apt install openvpn-server` (que depende de `openssh-server`) falle por dependencias no satisfechas. El script actualiza el sistema con APT y, si detecta el desajuste, reinstala el trío SSH desde el mismo backports que ya usa `openssh-client`. No instala `openvpn-server`: después de ejecutarlo, instálelo manualmente con `sudo apt install openvpn-server`.
+`scripts/openssh-backports-fix.sh` no forma parte de `install.sh` ni de sus componentes; es una utilidad manual independiente, sin relación con OpenVPN (el componente `base` ya instala `openvpn` mediante `packages/base.txt`, un paquete sin dependencias de SSH). En Parrot, `openssh-client` puede quedar instalado desde `*-backports` mientras `openssh-server`/`openssh-sftp-server` siguen en el repositorio estable; `openssh-server` exige la misma versión exacta de `openssh-client`, por lo que `apt install openssh-server` falla por dependencias no satisfechas. El script actualiza el sistema con APT y, si detecta el desajuste, reinstala el trío SSH desde el mismo backports que ya usa `openssh-client`.
 
 En un sistema que no sea Parrot, el segundo comando debe rechazar la ejecución. El smoke test usa las inyecciones restringidas de prueba para recorrer el flujo sin depender del host.
 
 ## Matriz pendiente en VM Parrot
 
 - Reevaluar `smbclient`, `enum4linux-ng`, `theharvester`, `routersploit`, `gdb-multiarch` y `plaso`; Parrot 7.3 no resuelve actualmente sus dependencias sin forzar versiones o backports.
-- Confirmar que `scripts/openvpn-server-install.sh` alinea correctamente `openssh-client`/`openssh-server`/`openssh-sftp-server` en una VM con el desajuste stable/backports, y que `sudo apt install openvpn-server` se completa después sin errores de dependencias.
+- Confirmar que `scripts/openssh-backports-fix.sh` alinea correctamente `openssh-client`/`openssh-server`/`openssh-sftp-server` en una VM con el desajuste stable/backports.
 - Instalar Suricata solo bajo autorización explícita: su paquete habilita `suricata.service` durante la postinstalación.
 - Confirmar `ID=parrot` y campos reales de `/etc/os-release`.
 - Validar cada nombre mediante `apt-cache show` y registrar versión disponible.
